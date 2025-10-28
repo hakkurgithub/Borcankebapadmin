@@ -120,7 +120,7 @@ export default function AboutPage() {
               <div
                 className="w-24 h-24 bg-cover bg-center rounded-full mx-auto mb-4"
                 style={{
-                  backgroundImage: `url('https://raw.githubusercontent.com/hakkurgithub/images/main/Erhan-Deniz.jpg')`,
+                  backgroundImage: `url('https://raw.githubusercontent.com/hakkurgithub/images/main/erhan-deniz.jpg')`,
                 }}
               ></div>
               <h3 className="text-xl font-semibold text-gray-800 mb-2">Erhan Deniz</h3>
@@ -150,7 +150,7 @@ export default function AboutPage() {
               <div
                 className="w-24 h-24 bg-cover bg-center rounded-full mx-auto mb-4"
                 style={{
-                  backgroundImage: `url('https://raw.githubusercontent.com/hakkurgithub/images/main/oktay-deniz .jpg')`,
+                  backgroundImage: `url('https://raw.githubusercontent.com/hakkurgithub/images/main/oktay-deniz.jpg')`,
                 }}
               ></div>
               <h3 className="text-xl font-semibold text-gray-800 mb-2">Oktay Deniz</h3>
