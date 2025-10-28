@@ -152,21 +152,21 @@ export default function Home() {
         <div className="container mx-auto">
           <h2 className="text-4xl font-bold text-center mb-12">İletişim</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div className="bg-white p-8 rounded-xl shadow-lg text-center">
+            <div className="bg-white p-8 rounded-xl shadow-lg text-center transition-all duration-300 ease-in-out hover:shadow-2xl hover:-translate-y-2">
               <i className="ri-map-pin-line text-4xl text-red-600 mb-4"></i>
               <h3 className="text-xl font-semibold mb-2">Adres</h3>
               <p className="text-gray-700">
                 {content.address}
               </p>
             </div>
-            <div className="bg-white p-8 rounded-xl shadow-lg text-center">
+            <div className="bg-white p-8 rounded-xl shadow-lg text-center transition-all duration-300 ease-in-out hover:shadow-2xl hover:-translate-y-2">
               <i className="ri-phone-line text-4xl text-red-600 mb-4"></i>
               <h3 className="text-xl font-semibold mb-2">Telefon</h3>
               <p className="text-gray-700">
                 {content.phone}
               </p>
             </div>
-            <div className="bg-white p-8 rounded-xl shadow-lg text-center">
+            <div className="bg-white p-8 rounded-xl shadow-lg text-center transition-all duration-300 ease-in-out hover:shadow-2xl hover:-translate-y-2">
               <i className="ri-mail-line text-4xl text-red-600 mb-4"></i>
               <h3 className="text-xl font-semibold mb-2">E-posta</h3>
               <p className="text-gray-700">info@borcankebap.com</p>
