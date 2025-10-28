@@ -4,6 +4,7 @@ import { Inter, Pacifico } from 'next/font/google';
 import './globals.css';
 import { CartProvider } from '../components/CartProvider';
 import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 import { SessionProvider } from "next-auth/react";
 
 const inter = Inter({ subsets: ['latin'] });
@@ -67,6 +68,7 @@ export default function RootLayout({
           <CartProvider>
             <Navbar />
             <main>{children}</main>
+            <Footer />
           </CartProvider>
         </SessionProvider>
       </body>
