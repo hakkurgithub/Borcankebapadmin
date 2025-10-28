@@ -144,26 +144,20 @@
         <p class="subtitle">Admin Paneline Giriş</p>
         
         <div class="demo-section">
-            <div class="demo-title">Demo Hesaplar</div>
-            
-            <button class="button btn-demo" onclick="login('demo')">
-                <span>👤</span>
-                <span>Demo Kullanıcı Girişi</span>
-            </button>
+            <div class="demo-title">Admin Girişi</div>
             
             <button class="button btn-manager" onclick="login('manager')">
                 <span>🔑</span>
-                <span>Manager (Admin) Girişi</span>
+                <span>Manager Girişi</span>
             </button>
             
             <div class="info">
-                <p><strong>👤 Demo:</strong> Kullanıcı dashboard erişimi</p>
-                <p><strong>🔑 Manager:</strong> Ürün düzenleme yetkisi</p>
+                <p><strong>� Manager:</strong> Kullanıcı adı: manager, Şifre: Borcan2025</p>
             </div>
         </div>
         
         <div class="footer">
-            Test amaçlı demo hesaplar
+            Manager admin girişi
         </div>
         
         <div id="loading" class="loading">
@@ -176,7 +170,7 @@
             const loading = document.getElementById('loading');
             loading.classList.add('active');
             
-            const redirectUrl = type === 'manager' ? '/manager' : '/dashboard';
+            const redirectUrl = '/manager';
             
             // NextAuth credentials endpoint'ine istek gönder
             fetch('/api/auth/signin/credentials', {
@@ -185,8 +179,8 @@
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    username: type,
-                    password: type,
+                    username: 'manager',
+                    password: 'Borcan2025',
                     redirect: false,
                     callbackUrl: redirectUrl
                 })

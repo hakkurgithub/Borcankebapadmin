@@ -9,12 +9,12 @@ export default function SignInForm() {
   const [password, setPassword] = useState("")
   const [isLoading, setIsLoading] = useState(false)
 
-  const handleCredentialsLogin = async (type: "demo" | "manager") => {
+  const handleCredentialsLogin = async () => {
     setIsLoading(true)
     try {
       const result = await signIn("credentials", {
-        username: type,
-        password: type,
+        username: "manager",
+        password: "Borcan2025",
         redirect: false
       })
       if (result?.ok) {
@@ -52,35 +52,23 @@ export default function SignInForm() {
 
   return (
     <>
-      <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-        <h3 className="text-sm font-medium text-blue-900 mb-3">Demo Hesaplar</h3>
+      <div className="bg-green-50 p-4 rounded-lg border border-green-200">
+        <h3 className="text-sm font-medium text-green-900 mb-3">Manager Girişi</h3>
         
         <div className="space-y-3">
-          <div className="grid grid-cols-2 gap-3">
-            <button 
-              type="button"
-              onClick={() => handleCredentialsLogin("demo")}
-              disabled={isLoading}
-              className="flex items-center justify-center px-3 py-2 bg-blue-600 text-white rounded-md text-sm hover:bg-blue-700 transition-colors disabled:opacity-50"
-            >
-              <User className="mr-1 h-3 w-3" />
-              Demo User
-            </button>
-            
-            <button 
-              type="button"
-              onClick={() => handleCredentialsLogin("manager")}
-              disabled={isLoading}
-              className="flex items-center justify-center px-3 py-2 bg-green-600 text-white rounded-md text-sm hover:bg-green-700 transition-colors disabled:opacity-50"
-            >
-              <Shield className="mr-1 h-3 w-3" />
-              Manager
-            </button>
-          </div>
+          <button 
+            type="button"
+            onClick={handleCredentialsLogin}
+            disabled={isLoading}
+            className="w-full flex items-center justify-center px-4 py-3 bg-green-600 text-white rounded-md text-sm hover:bg-green-700 transition-colors disabled:opacity-50"
+          >
+            <Shield className="mr-2 h-4 w-4" />
+            Manager Girişi
+          </button>
           
-          <div className="text-xs text-blue-700">
-            <p><strong>Demo User:</strong> Kullanıcı paneli erişimi</p>
-            <p><strong>Manager:</strong> Yönetici paneli erişimi</p>
+          <div className="text-xs text-green-700">
+            <p><strong>Kullanıcı adı:</strong> manager</p>
+            <p><strong>Şifre:</strong> Borcan2025</p>
           </div>
         </div>
       </div>
@@ -93,7 +81,7 @@ export default function SignInForm() {
           <div>
             <input
               type="text"
-              placeholder="Kullanıcı adı (demo/manager)"
+              placeholder="Kullanıcı adı (manager)"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -102,7 +90,7 @@ export default function SignInForm() {
           <div>
             <input
               type="password"
-              placeholder="Şifre (demo/manager)"
+              placeholder="Şifre (Borcan2025)"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"

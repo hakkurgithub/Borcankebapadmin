@@ -3,7 +3,7 @@ name: "Karışık Pide"
 description: "Kaşar peyniri, sucuk, yumurta ve sebzelerle hazırlanmış nefis pide"
 price: 55
 category: "Pide"
-image: "/images/menu/karisik-pide.jpg"
+image: "https://raw.githubusercontent.com/hakkurgithub/images/main/karisik-pide.jpeg"
 calories: 520
 isVegetarian: false
 isVegan: false

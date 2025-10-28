@@ -3,7 +3,7 @@ name: "Klasik Döner"
 description: "Geleneksel döner usulü hazırlanmış, taze sebzelerle servis edilen klasik dönerimiz"
 price: 45
 category: "Döner"
-image: "/images/menu/klasik-doner.jpg"
+image: "https://raw.githubusercontent.com/hakkurgithub/images/main/doner-kebap.jpg"
 calories: 420
 isVegetarian: false
 isVegan: false

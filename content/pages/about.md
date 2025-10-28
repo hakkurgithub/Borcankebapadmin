@@ -1,6 +1,6 @@
 ---
 title: "Hakkımızda"
-image: "/images/about-hero.jpg"
+image: "https://raw.githubusercontent.com/hakkurgithub/images/main/hero.png"
 ---
 
 # Karagöz Döner Hakkında

@@ -3,7 +3,7 @@ name: "Tavuk Döner"
 description: "Marine edilmiş tavuk göğsünden hazırlanan sağlıklı döner alternatifi"
 price: 40
 category: "Döner"
-image: "/images/menu/tavuk-doner.jpg"
+image: "https://raw.githubusercontent.com/hakkurgithub/images/main/tavuk-doner.jpg"
 calories: 350
 isVegetarian: false
 isVegan: false

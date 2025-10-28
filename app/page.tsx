@@ -46,13 +46,14 @@ export default function Home() {
   return (
     <div className="bg-gray-50 text-gray-800">
       {/* Hero Section */}
-      <section
-        className="relative w-full h-[500px] flex items-center justify-center text-white text-center overflow-hidden"
-        style={{
-          backgroundImage: `url('https://raw.githubusercontent.com/hakkurgithub/images/main/Borcan-kebap-personeli.png')`,
-        }}
-      >
-        <div className="absolute inset-0 bg-black opacity-50"></div>
+      <section className="relative w-full h-[600px] flex items-center justify-center text-white text-center overflow-hidden bg-gradient-to-r from-red-800 to-red-600">
+        {/* Background Image */}
+        <img 
+          src="https://raw.githubusercontent.com/hakkurgithub/images/main/borcan-kebap-personeli.png"
+          alt="Borcan Kebap Personeli"
+          className="absolute inset-0 w-full h-full object-cover opacity-70"
+        />
+        <div className="absolute inset-0 bg-black opacity-30"></div>
         <div className="relative z-10 p-4">
           <h1 className="text-4xl sm:text-6xl font-extrabold mb-4 font-['Pacifico'] leading-tight">
             {content.restaurantName}
@@ -123,7 +124,7 @@ export default function Home() {
         <div className="container mx-auto flex flex-col md:flex-row items-center gap-12">
           <div className="md:w-1/2 relative h-[350px] rounded-xl overflow-hidden shadow-lg">
             <Image
-              src="/images/about.jpg"
+              src="https://raw.githubusercontent.com/hakkurgithub/images/main/hero.png"
               alt="Hakkımızda"
               fill
               className="object-cover"

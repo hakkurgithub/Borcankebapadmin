@@ -199,7 +199,7 @@ export const MENU_ITEMS: MenuItem[] = [
     price: 240,
     description: "Izgara yürek ile dürüm.",
     category: "Dürüm",
-  image: "https://raw.githubusercontent.com/hakkurgithub/images/main/yure-durum.jpeg",
+  image: "https://raw.githubusercontent.com/hakkurgithub/images/main/yurek-durum.jpeg",
     rating: 5,
   },
   {

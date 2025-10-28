@@ -3,27 +3,21 @@ import GitHub from "next-auth/providers/github"
 import Credentials from "next-auth/providers/credentials"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({  
+  trustHost: true,
+  
   providers: [
-    // Demo credentials provider
+    // Manager credentials provider
     Credentials({
-      name: "Demo",
+      name: "Manager",
       credentials: {
-        username: { label: "Username", type: "text", placeholder: "demo" },
-        password: { label: "Password", type: "password", placeholder: "demo" }
+        username: { label: "Username", type: "text", placeholder: "manager" },
+        password: { label: "Password", type: "password", placeholder: "password" }
       },
       async authorize(credentials) {
-        if (credentials?.username === "demo" && credentials?.password === "demo") {
+        if (credentials?.username === "manager" && credentials?.password === "Borcan2025") {
           return {
-            id: "1",
-            name: "Demo User",
-            email: "demo@karagozdoner.com",
-            role: "b2b" as const,
-          }
-        }
-        if (credentials?.username === "manager" && credentials?.password === "manager") {
-          return {
-            id: "2", 
-            name: "Manager Demo",
+            id: "1", 
+            name: "Manager",
             email: "manager@karagozdoner.com",
             role: "manager" as const,
           }
