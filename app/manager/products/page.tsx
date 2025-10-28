@@ -193,22 +193,23 @@ export default async function ManagerProductsPage() {
                   >
                     💾 Kaydet
                   </button>
-                  
-                  <form action={toggleProductStatus} className="inline">
-                    <input type="hidden" name="id" value={product.id} />
-                    <input type="hidden" name="currentStatus" value={product.isActive ? "true" : "false"} />
-                    <button
-                      type="submit"
-                      className={`px-6 py-2 rounded-lg font-medium ${
-                        product.isActive
-                          ? 'bg-red-600 text-white hover:bg-red-700'
-                          : 'bg-green-600 text-white hover:bg-green-700'
-                      }`}
-                    >
-                      {product.isActive ? '🔴 Pasif Yap' : '🟢 Aktif Yap'}
-                    </button>
-                  </form>
                 </div>
+              </form>
+              
+              {/* Toggle Status Form - Ayrı form olarak */}
+              <form action={toggleProductStatus} className="inline">
+                <input type="hidden" name="id" value={product.id} />
+                <input type="hidden" name="currentStatus" value={product.isActive ? "true" : "false"} />
+                <button
+                  type="submit"
+                  className={`px-6 py-2 rounded-lg font-medium ${
+                    product.isActive
+                      ? 'bg-red-600 text-white hover:bg-red-700'
+                      : 'bg-green-600 text-white hover:bg-green-700'
+                  }`}
+                >
+                  {product.isActive ? '🔴 Pasif Yap' : '🟢 Aktif Yap'}
+                </button>
               </form>
             </div>
           ))}
