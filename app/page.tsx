@@ -51,7 +51,7 @@ export default function Home() {
         <img 
           src="https://raw.githubusercontent.com/hakkurgithub/images/main/borcan-kebap-personeli.png"
           alt="Borcan Kebap Personeli"
-          className="absolute inset-0 w-full h-full object-cover opacity-70"
+          className="absolute inset-0 w-full h-full object-contain opacity-70"
         />
         <div className="absolute inset-0 bg-black opacity-30"></div>
         <div className="relative z-10 p-4">
