@@ -127,7 +127,7 @@ export default function Home() {
               src="https://raw.githubusercontent.com/hakkurgithub/images/main/hero.png"
               alt="Hakkımızda"
               fill
-              className="object-cover"
+              className="object-contain"
             />
           </div>
           <div className="md:w-1/2">
