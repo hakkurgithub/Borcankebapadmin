@@ -57,10 +57,7 @@ export default function Home() {
           <h1 className="text-4xl sm:text-6xl font-extrabold mb-4 font-['Pacifico'] leading-tight text-red-700">
             {content.restaurantName}
           </h1>
-          <p className="text-lg sm:text-xl font-light mb-6 text-gray-700">
-            {content.heroTitle}
-          </p>
-          <div className="flex justify-center space-x-4">
+          <div className="flex justify-center space-x-4 mt-8">
             <Link
               href="/menu"
               className="bg-red-600 text-white px-6 py-3 rounded-full text-lg font-semibold hover:bg-red-700 transition-transform transform hover:scale-105 shadow-lg"
