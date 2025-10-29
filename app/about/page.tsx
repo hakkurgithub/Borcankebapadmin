@@ -116,9 +116,9 @@ export default function AboutPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-white rounded-xl shadow-lg p-6 text-center">
+            <div className="bg-white rounded-xl shadow-lg p-6 text-center hover:shadow-2xl transition-all duration-300">
               <div
-                className="w-24 h-24 bg-cover bg-center rounded-full mx-auto mb-4"
+                className="w-24 h-24 bg-cover bg-center rounded-full mx-auto mb-4 cursor-pointer transform hover:scale-150 hover:w-48 hover:h-48 hover:rounded-lg hover:fixed hover:top-1/2 hover:left-1/2 hover:-translate-x-1/2 hover:-translate-y-1/2 hover:z-50 hover:shadow-2xl transition-all duration-500 ease-in-out"
                 style={{
                   backgroundImage: `url('https://raw.githubusercontent.com/hakkurgithub/images/main/erhan-deniz.jpg')`,
                 }}
@@ -131,9 +131,9 @@ export default function AboutPage() {
               </p>
             </div>
 
-            <div className="bg-white rounded-xl shadow-lg p-6 text-center">
+            <div className="bg-white rounded-xl shadow-lg p-6 text-center hover:shadow-2xl transition-all duration-300">
               <div
-                className="w-24 h-24 bg-cover bg-center rounded-full mx-auto mb-4"
+                className="w-24 h-24 bg-cover bg-center rounded-full mx-auto mb-4 cursor-pointer transform hover:scale-150 hover:w-48 hover:h-48 hover:rounded-lg hover:fixed hover:top-1/2 hover:left-1/2 hover:-translate-x-1/2 hover:-translate-y-1/2 hover:z-50 hover:shadow-2xl transition-all duration-500 ease-in-out"
                 style={{
                   backgroundImage: `url('https://raw.githubusercontent.com/hakkurgithub/images/main/faruk-deniz.jpg')`,
                 }}
@@ -146,9 +146,9 @@ export default function AboutPage() {
               </p>
             </div>
 
-            <div className="bg-white rounded-xl shadow-lg p-6 text-center">
+            <div className="bg-white rounded-xl shadow-lg p-6 text-center hover:shadow-2xl transition-all duration-300">
               <div
-                className="w-24 h-24 bg-cover bg-center rounded-full mx-auto mb-4"
+                className="w-24 h-24 bg-cover bg-center rounded-full mx-auto mb-4 cursor-pointer transform hover:scale-150 hover:w-48 hover:h-48 hover:rounded-lg hover:fixed hover:top-1/2 hover:left-1/2 hover:-translate-x-1/2 hover:-translate-y-1/2 hover:z-50 hover:shadow-2xl transition-all duration-500 ease-in-out"
                 style={{
                   backgroundImage: `url('https://raw.githubusercontent.com/hakkurgithub/images/main/oktay-deniz.jpg')`,
                 }}
