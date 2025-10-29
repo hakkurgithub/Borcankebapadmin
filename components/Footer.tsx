@@ -13,7 +13,7 @@ export default function Footer() {
             </p>
             <div className="flex space-x-4">
               <a
-                href="https://www.facebook.com/brcnkbp"
+                href="https://www.facebook.com/profile.php?id=61579514506784"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center cursor-pointer hover:bg-blue-700 transition-colors"
@@ -21,16 +21,13 @@ export default function Footer() {
                 <i className="ri-facebook-fill text-lg"></i>
               </a>
               <a
-                href="https://www.instagram.com/borcankebap/"
+                href="https://www.instagram.com/borcan_kebap_pide_lahmacun/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-12 h-12 bg-gradient-to-br from-purple-600 via-pink-600 to-orange-600 rounded-full flex items-center justify-center cursor-pointer hover:from-purple-700 hover:via-pink-700 hover:to-orange-700 transition-all"
               >
                 <i className="ri-instagram-fill text-lg"></i>
               </a>
-              <div className="w-12 h-12 bg-red-600 rounded-full flex items-center justify-center cursor-pointer hover:bg-red-700 transition-colors">
-                <i className="ri-twitter-fill text-lg"></i>
-              </div>
             </div>
           </div>
 
