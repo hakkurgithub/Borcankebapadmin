@@ -175,26 +175,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Admin ve Modallar */}
-      {isClient && (
-        <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-3">
-          <a
-            href="/manager/products"
-            className="w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center hover:bg-blue-700 transition-colors shadow-lg"
-            title="Ürün Yönetimi"
-          >
-            <i className="ri-shopping-bag-line text-lg"></i>
-          </a>
-          <button
-            onClick={handleAdminClick}
-            className="w-12 h-12 bg-gray-800 text-white rounded-full flex items-center justify-center hover:bg-gray-700 transition-colors shadow-lg"
-            title="Admin Paneli"
-          >
-            <i className="ri-admin-line text-lg"></i>
-          </button>
-        </div>
-      )}
-
+      {/* Modallar */}
       <ReservationModal isOpen={showReservationModal} onClose={() => setShowReservationModal(false)} />
       <WhatsAppOrderModal isOpen={showWhatsAppModal} onClose={() => setShowWhatsAppModal(false)} />
       {isClient && <AdminPanel isOpen={showAdminPanel} onClose={() => setShowAdminPanel(false)} />}
