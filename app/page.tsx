@@ -44,21 +44,20 @@ export default function Home() {
   const aboutText = content.aboutText || "Borcan Kebap, 1985 yılından beri geleneksel Türk mutfağının eşsiz lezzetlerini sunmaktadır. Aileden gelen 40 yıllık deneyimimizle, her yemeğimizde kaliteyi ve tazeliği hissedersiniz.";
 
   return (
-    <div className="bg-gray-50 text-gray-800">
+    <div className="bg-white text-gray-800">
       {/* Hero Section */}
-      <section className="relative w-full h-[600px] flex items-center justify-center text-white text-center overflow-hidden bg-gradient-to-r from-red-800 to-red-600">
+      <section className="relative w-full h-[600px] flex items-center justify-center text-gray-800 text-center overflow-hidden bg-white">
         {/* Background Image */}
         <img 
           src="https://raw.githubusercontent.com/hakkurgithub/images/main/borcan-kebap-personeli.png"
           alt="Borcan Kebap Personeli"
-          className="absolute inset-0 w-full h-full object-contain opacity-70"
+          className="absolute inset-0 w-full h-full object-contain opacity-90"
         />
-        <div className="absolute inset-0 bg-black opacity-30"></div>
         <div className="relative z-10 p-4">
-          <h1 className="text-4xl sm:text-6xl font-extrabold mb-4 font-['Pacifico'] leading-tight">
+          <h1 className="text-4xl sm:text-6xl font-extrabold mb-4 font-['Pacifico'] leading-tight text-red-700">
             {content.restaurantName}
           </h1>
-          <p className="text-lg sm:text-xl font-light mb-6">
+          <p className="text-lg sm:text-xl font-light mb-6 text-gray-700">
             {content.heroTitle}
           </p>
           <div className="flex justify-center space-x-4">
@@ -70,7 +69,7 @@ export default function Home() {
             </Link>
             <button
               onClick={() => setShowReservationModal(true)}
-              className="bg-white text-red-600 px-6 py-3 rounded-full text-lg font-semibold hover:bg-gray-100 transition-transform transform hover:scale-105 shadow-lg"
+              className="bg-white text-red-600 px-6 py-3 rounded-full text-lg font-semibold hover:bg-gray-100 transition-transform transform hover:scale-105 shadow-lg border-2 border-red-600"
             >
               Rezervasyon Yap
             </button>
