@@ -117,12 +117,14 @@ export default function AboutPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="bg-white rounded-xl shadow-lg p-6 text-center hover:shadow-2xl transition-all duration-300">
-              <div
-                className="w-24 h-24 bg-cover bg-center rounded-full mx-auto mb-4 cursor-pointer transform hover:scale-150 hover:w-48 hover:h-48 hover:rounded-lg hover:fixed hover:top-1/2 hover:left-1/2 hover:-translate-x-1/2 hover:-translate-y-1/2 hover:z-50 hover:shadow-2xl transition-all duration-500 ease-in-out"
-                style={{
-                  backgroundImage: `url('https://raw.githubusercontent.com/hakkurgithub/images/main/erhan-deniz.jpg')`,
-                }}
-              ></div>
+              <div className="relative w-24 h-24 mx-auto mb-4">
+                <div
+                  className="w-24 h-24 bg-cover bg-center rounded-full cursor-pointer transition-all duration-300 hover:scale-110"
+                  style={{
+                    backgroundImage: `url('https://raw.githubusercontent.com/hakkurgithub/images/main/erhan-deniz.jpg')`,
+                  }}
+                ></div>
+              </div>
               <h3 className="text-xl font-semibold text-gray-800 mb-2">Erhan Deniz</h3>
               <p className="text-red-600 font-medium mb-3">Baş Aşçı</p>
               <p className="text-gray-600 text-sm">
@@ -132,12 +134,14 @@ export default function AboutPage() {
             </div>
 
             <div className="bg-white rounded-xl shadow-lg p-6 text-center hover:shadow-2xl transition-all duration-300">
-              <div
-                className="w-24 h-24 bg-cover bg-center rounded-full mx-auto mb-4 cursor-pointer transform hover:scale-150 hover:w-48 hover:h-48 hover:rounded-lg hover:fixed hover:top-1/2 hover:left-1/2 hover:-translate-x-1/2 hover:-translate-y-1/2 hover:z-50 hover:shadow-2xl transition-all duration-500 ease-in-out"
-                style={{
-                  backgroundImage: `url('https://raw.githubusercontent.com/hakkurgithub/images/main/faruk-deniz.jpg')`,
-                }}
-              ></div>
+              <div className="relative w-24 h-24 mx-auto mb-4">
+                <div
+                  className="w-24 h-24 bg-cover bg-center rounded-full cursor-pointer transition-all duration-300 hover:scale-110"
+                  style={{
+                    backgroundImage: `url('https://raw.githubusercontent.com/hakkurgithub/images/main/faruk-deniz.jpg')`,
+                  }}
+                ></div>
+              </div>
               <h3 className="text-xl font-semibold text-gray-800 mb-2">Faruk Deniz</h3>
               <p className="text-red-600 font-medium mb-3">Pide Ustası</p>
               <p className="text-gray-600 text-sm">
@@ -147,12 +151,14 @@ export default function AboutPage() {
             </div>
 
             <div className="bg-white rounded-xl shadow-lg p-6 text-center hover:shadow-2xl transition-all duration-300">
-              <div
-                className="w-24 h-24 bg-cover bg-center rounded-full mx-auto mb-4 cursor-pointer transform hover:scale-150 hover:w-48 hover:h-48 hover:rounded-lg hover:fixed hover:top-1/2 hover:left-1/2 hover:-translate-x-1/2 hover:-translate-y-1/2 hover:z-50 hover:shadow-2xl transition-all duration-500 ease-in-out"
-                style={{
-                  backgroundImage: `url('https://raw.githubusercontent.com/hakkurgithub/images/main/oktay-deniz.jpg')`,
-                }}
-              ></div>
+              <div className="relative w-24 h-24 mx-auto mb-4">
+                <div
+                  className="w-24 h-24 bg-cover bg-center rounded-full cursor-pointer transition-all duration-300 hover:scale-110"
+                  style={{
+                    backgroundImage: `url('https://raw.githubusercontent.com/hakkurgithub/images/main/oktay-deniz.jpg')`,
+                  }}
+                ></div>
+              </div>
               <h3 className="text-xl font-semibold text-gray-800 mb-2">Oktay Deniz</h3>
               <p className="text-red-600 font-medium mb-3">Restoran Müdürü</p>
               <p className="text-gray-600 text-sm">
