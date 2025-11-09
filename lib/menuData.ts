@@ -27,7 +27,7 @@ export const MENU_ITEMS: MenuItem[] = [
     price: 450,
     description: "Özel baharatlı Adana kebap, pilav ve közlenmiş sebzelerle.",
     category: "Kebaplar & Izgaralar",
-  image: "https://raw.githubusercontent.com/hakkurgithub/images/main/adana-porsiyon.jpg",
+  image: "https://raw.githubusercontent.com/hakkurgithub/images/main/urfa-porsiyon.jpg",
     rating: 5,
   },
   {
