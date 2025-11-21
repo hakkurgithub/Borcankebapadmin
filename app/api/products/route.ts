@@ -11,7 +11,8 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url)
     const category = searchParams.get('category')
     
-    let products
+    // HATA BURADAYDI: TypeScript'e bu değişkenin bir "Product Listesi" olduğunu söylüyoruz.
+    let products: Product[] = []; 
     
     if (category) {
       products = await getProductsByCategory(category)
@@ -19,7 +20,7 @@ export async function GET(request: NextRequest) {
       products = await getAllProducts()
     }
     
-    // Eğer ürünler boş gelirse veya undefined ise güvenli bir diziye çevir
+    // Eğer veritabanından null gelirse diye önlem alalım
     if (!products) {
          products = [];
     }
@@ -37,7 +38,7 @@ export async function GET(request: NextRequest) {
     }, {
         status: 200,
         headers: {
-            'Cache-Control': 'no-store, max-age=0', // Tarayıcıya "bunu saklama" der
+            'Cache-Control': 'no-store, max-age=0',
         }
     })
     
