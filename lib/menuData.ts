@@ -472,7 +472,7 @@ export const MENU_ITEMS: MenuItem[] = [
     price: 15,
     description: "Geleneksel ince belli bardakta sıcak çay.",
     category: "İçecekler",
-    image: "https://raw.githubusercontent.com/hakkurgithub/images/main/acik-ayran.jpg",
+    image: "https://raw.githubusercontent.com/hakkurgithub/images/main/turk-cayi.jpg",
     rating: 5,
   },
   {

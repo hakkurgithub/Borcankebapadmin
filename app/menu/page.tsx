@@ -1,16 +1,16 @@
 'use client';
 
 import { useState, useEffect } from "react";
-import { useCart } from "../../components/CartProvider";
+import { useCart } from "../../components/CartProvider"; // Eğer hata verirse yolunu '../components/CartProvider' olarak dene
 import Image from "next/image";
 
 interface Product {
     id: number;
     name: string;
     description: string | null;
-    price: number | string; // API'den numeric string veya number gelebilir
-    priceInLira?: number; // API'den gelen formatlanmış fiyat
-    formattedPrice?: string; // API'den gelen formatlanmış string
+    price: number | string;
+    priceInLira?: number;
+    formattedPrice?: string;
     category: string | null;
     image: string | null;
     isActive: number;
@@ -26,10 +26,12 @@ export default function MenuPage() {
     useEffect(() => {
         setIsClient(true);
         
-        // Fetch products from API
-        fetch('/api/products')
+        // ÖNEMLİ DÜZELTME: { cache: 'no-store' } eklendi.
+        // Bu sayede Next.js eski boş veriyi değil, veritabanındaki yeni veriyi zorla çeker.
+        fetch('/api/products', { cache: 'no-store' })
             .then(res => res.json())
             .then(data => {
+                console.log("Veritabanından Gelen Veri:", data); // Konsoldan kontrol edebilirsin
                 if (data.success) {
                     setProducts(data.data);
                 }
@@ -62,14 +64,18 @@ export default function MenuPage() {
         addItem({
             id: String(item.id),
             name: item.name,
-            price: price, // TL cinsinden number
+            price: price,
         });
     };
 
+    // Sayfa yüklenirken veya Client tarafı hazır değilken gösterilecek ekran
     if (!isClient || loading) {
         return (
-            <div className="flex items-center justify-center min-h-screen">
-                <div className="text-2xl text-gray-600">Yükleniyor...</div>
+            <div className="flex items-center justify-center min-h-screen bg-white">
+                <div className="text-center">
+                    <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-red-600 mx-auto mb-4"></div>
+                    <p className="text-xl text-gray-600 font-semibold">Menü Yükleniyor...</p>
+                </div>
             </div>
         );
     }
@@ -78,19 +84,19 @@ export default function MenuPage() {
         <div className="bg-gray-50 min-h-screen">
             <div className="container mx-auto px-4 sm:px-6 py-12">
                 <h1 className="text-4xl font-bold text-center text-red-600 mb-8">
-                    Menü
+                    Lezzet Menümüz
                 </h1>
 
-                {/* Category Filter */}
+                {/* Kategori Filtresi */}
                 <div className="flex flex-wrap justify-center gap-2 sm:gap-4 mb-8">
                     {categories.map((category) => (
                         <button
                             key={category}
                             onClick={() => setActiveCategory(category)}
-                            className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                            className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
                                 activeCategory === category
-                                    ? "bg-red-600 text-white"
-                                    : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                                    ? "bg-red-600 text-white shadow-md transform scale-105"
+                                    : "bg-white text-gray-700 border border-gray-200 hover:bg-gray-100"
                             }`}
                         >
                             {category === "all" ? "Tümü" : category}
@@ -98,41 +104,75 @@ export default function MenuPage() {
                     ))}
                 </div>
 
-                {/* Menu Items Grid */}
+                {/* Ürün Yoksa Gösterilecek Uyarı */}
+                {!loading && filteredItems.length === 0 && (
+                    <div className="text-center py-10 bg-white rounded-xl shadow p-8 max-w-lg mx-auto">
+                        <div className="text-5xl mb-4">🍽️</div>
+                        <h3 className="text-xl font-bold text-gray-800 mb-2">Ürün Bulunamadı</h3>
+                        <p className="text-gray-500 mb-4">
+                            "{activeCategory === 'all' ? 'Tümü' : activeCategory}" kategorisinde henüz ürün eklenmemiş olabilir.
+                        </p>
+                        <button 
+                            onClick={() => window.location.reload()}
+                            className="px-4 py-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition-colors text-sm font-semibold"
+                        >
+                            Sayfayı Yenile
+                        </button>
+                    </div>
+                )}
+
+                {/* Menü Kartları */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                     {filteredItems.map((item) => {
-                        // ✅ Sepette bu ürünün olup olmadığını kontrol et
                         const cartItem = items.find(cartItem => cartItem.id === String(item.id));
                         
                         return (
                             <div
                                 key={item.id}
-                                className="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col hover:shadow-2xl transition-shadow duration-300"
+                                className="bg-white rounded-xl shadow-md overflow-hidden flex flex-col hover:shadow-xl transition-shadow duration-300 border border-gray-100 group"
                             >
-                                <div className="relative w-full h-48">
+                                {/* Resim Alanı */}
+                                <div className="relative w-full h-56 sm:h-64 bg-gray-200 overflow-hidden">
                                     <Image
                                         src={item.image || '/images/placeholder.jpg'}
                                         alt={item.name}
                                         fill
-                                        className="object-cover"
+                                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                        className="object-cover group-hover:scale-105 transition-transform duration-500"
+                                        priority={item.id < 6}
                                     />
                                 </div>
+                                
                                 <div className="p-5 flex-1 flex flex-col">
-                                    <h3 className="text-xl font-semibold mb-2">{item.name}</h3>
-                                    <p className="text-gray-600 text-sm flex-1">{item.description}</p>
-                                    <div className="flex justify-between items-center mt-4">
+                                    <div className="flex justify-between items-start mb-2">
+                                        <h3 className="text-xl font-bold text-gray-800">{item.name}</h3>
+                                        {item.category && (
+                                            <span className="text-xs px-2 py-1 bg-orange-100 text-orange-800 rounded-full font-medium">
+                                                {item.category}
+                                            </span>
+                                        )}
+                                    </div>
+                                    
+                                    <p className="text-gray-600 text-sm flex-1 line-clamp-2 mb-4">
+                                        {item.description || "Lezzetli bir seçim."}
+                                    </p>
+                                    
+                                    <div className="flex justify-between items-center mt-auto pt-4 border-t border-gray-100">
                                         <span className="text-2xl font-bold text-red-600">
-                                            {Math.round(item.priceInLira || parseFloat(String(item.price)))}₺
+                                            {item.formattedPrice ? item.formattedPrice : `${item.price} ₺`}
                                         </span>
                                         <div className="relative">
                                             <button
                                                 onClick={() => handleAddToCart(item)}
-                                                className="bg-red-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-red-700 transition-colors"
+                                                className="flex items-center gap-2 bg-red-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-red-700 active:bg-red-800 transition-colors shadow-sm"
                                             >
-                                                <i className="ri-shopping-cart-fill mr-2"></i>Ekle
+                                                <span>Sepete Ekle</span>
+                                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                                    <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" />
+                                                </svg>
                                             </button>
                                             {cartItem && (
-                                                <span className="absolute -top-2 -right-2 bg-yellow-400 text-red-900 text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                                                <span className="absolute -top-2 -right-2 bg-yellow-500 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center shadow-sm border-2 border-white animate-bounce">
                                                     {cartItem.quantity}
                                                 </span>
                                             )}

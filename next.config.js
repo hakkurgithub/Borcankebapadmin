@@ -1,16 +1,15 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // raw.githubusercontent.com'dan resim çekmek için izin
   images: {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'raw.githubusercontent.com',
+        hostname: 'raw.githubusercontent.com', // Resimlerin geldiği GitHub adresi
         port: '',
-        pathname: '/hakkurgithub/images/main/**',
+        pathname: '/**',
       },
     ],
   },
 };
 
-module.exports = nextConfig;
+export default nextConfig;
