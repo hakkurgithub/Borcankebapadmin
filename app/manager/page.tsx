@@ -1,188 +1,113 @@
-// app/manager/page.tsx
-import { auth } from "../../lib/auth";
+import { authOptions } from "../../lib/auth"; // Auth ayarlarını çekiyoruz
+import { getServerSession } from "next-auth"; // Sunucu tarafı oturum kontrolü
 import { redirect } from "next/navigation";
 import { getAllOrders, getAllProducts } from "../../lib/products";
+import Link from "next/link";
 
 export default async function ManagerPage() {
-  // TEMPORARY: Auth check disabled for testing
-  // const session = await auth();
-  // if (session?.user?.role !== "manager") {
-  //   redirect("/");
-  // }
+  // 🔒 GÜVENLİK KONTROLÜ
+  const session = await getServerSession(authOptions);
   
-  // Mock session for testing without auth
-  const session = {
-    user: {
-      name: "Test Manager",
-      role: "manager"
-    }
-  };
+  // Eğer oturum yoksa login'e at
+  if (!session) {
+    redirect("/login");
+  }
 
-  // Database connection and data fetching with proper error handling
+  // Eğer giriş yapan kişi manager değilse ana sayfaya at (İsteğe bağlı)
+  // if ((session.user as any).role !== "manager") { redirect("/"); }
+
   let allOrders: any[] = [];
   let allProducts: any[] = [];
   let dbError: string | null = null;
   
   try {
-    // Veritabanından veri çekme işlemleri
     allOrders = await getAllOrders();
     allProducts = await getAllProducts();
-    console.log("✅ Database connection successful - Real data loaded");
   } catch (error) {
-    console.error("❌ Database connection failed:", error);
-    dbError = error instanceof Error ? error.message : String(error);
-    
-    // Fallback to mock data for development
-    console.log("🔄 Falling back to mock data for development");
-    allOrders = [
-      {
-        id: 1,
-        customerName: "Demo Müşteri",
-        status: "completed",
-        orderType: "dine-in",
-        total: 3500, // 35 TL (kuruş cinsinden)
-        createdAt: new Date().toISOString(),
-        userName: "Demo User"
-      },
-      {
-        id: 2,
-        customerName: "Test Kullanıcı",
-        status: "pending",
-        orderType: "takeaway",
-        total: 2800, // 28 TL
-        createdAt: new Date(Date.now() - 86400000).toISOString(), // 1 gün önce
-        userName: "Test User"
-      }
-    ];
-    
-    allProducts = [
-      { id: 1, name: "Klasik Döner", price: 2500, isActive: 1 },
-      { id: 2, name: "Tavuk Döner", price: 2800, isActive: 1 },
-      { id: 3, name: "Ayran", price: 500, isActive: 1 }
-    ];
+    console.error("❌ Yönetici Paneli Hatası:", error);
+    dbError = "Veritabanı bağlantısında sorun oluştu.";
   }
   
-  // Basit istatistikler
   const totalOrders = allOrders.length;
-  const totalRevenue = allOrders.reduce((sum, order) => sum + order.total, 0);
-  const activeProducts = allProducts.filter(p => p.isActive === 1).length;
+  const totalRevenue = allOrders.reduce((sum, order) => sum + Number(order.total || 0), 0);
+  const activeProducts = allProducts.filter((p: any) => p.isActive === 1 || p.is_active === 1).length;
 
   return (
-    <div className="container mx-auto p-4">
-      <div className="flex justify-between items-center mb-4">
-        <div>
+    <div className="container mx-auto p-4 min-h-screen bg-gray-50">
+      {/* Üst Kısım */}
+      <div className="flex flex-col md:flex-row justify-between items-center mb-8 bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+        <div className="mb-4 md:mb-0">
           <h1 className="text-3xl font-bold text-gray-800">Yönetici Paneli</h1>
-          <p className="mt-2 text-gray-600">
-            Hoş geldiniz, {session.user.name}. Rolünüz: 
-            <span className="font-semibold text-blue-600 ml-1">{session.user.role}</span>
+          <p className="text-sm text-gray-500 mt-1">
+            Hoş geldiniz, <span className="font-semibold text-red-600">{session.user?.name}</span>
           </p>
         </div>
-        <a 
-          href="/manager/products" 
-          className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold shadow-lg transition-colors"
-        >
-          📦 Ürünleri Düzenle
-        </a>
-      </div>
-      
-      {/* Database Status Indicator */}
-      {dbError && (
-        <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-          <div className="flex items-center">
-            <div className="text-yellow-600 mr-2">⚠️</div>
-            <div>
-              <h3 className="text-sm font-medium text-yellow-800">Development Mode - Mock Data</h3>
-              <p className="text-sm text-yellow-700 mt-1">
-                Database connection not configured. Using demo data for development.
-                <br />
-                <span className="text-xs">
-                  To enable real data: Set POSTGRES_URL in .env.local with your Vercel Postgres connection string.
-                </span>
-              </p>
-            </div>
-          </div>
+        <div className="flex gap-3">
+           <a href="/" className="px-5 py-2.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium">
+            🏠 Siteye Git
+          </a>
+          <Link href="/manager/products" className="px-5 py-2.5 bg-red-600 text-white rounded-lg hover:bg-red-700 shadow-md flex items-center gap-2 font-bold transition-transform hover:scale-105">
+            📦 MENÜYÜ DÜZENLE
+          </Link>
         </div>
-      )}
+      </div>
       
       {/* İstatistik Kartları */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-        <div className="bg-white p-6 rounded-lg shadow-md border-l-4 border-blue-500">
-          <h3 className="text-lg font-semibold text-gray-700">Toplam Sipariş</h3>
-          <p className="text-3xl font-bold text-blue-600 mt-2">{totalOrders}</p>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+          <h3 className="text-gray-500 font-medium text-sm uppercase tracking-wider">Toplam Sipariş</h3>
+          <p className="text-4xl font-bold text-gray-800 mt-2">{totalOrders}</p>
         </div>
-        
-        <div className="bg-white p-6 rounded-lg shadow-md border-l-4 border-green-500">
-          <h3 className="text-lg font-semibold text-gray-700">Toplam Ciro</h3>
-          <p className="text-3xl font-bold text-green-600 mt-2">
-            {(totalRevenue / 100).toFixed(2)} ₺
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+           <h3 className="text-gray-500 font-medium text-sm uppercase tracking-wider">Toplam Ciro</h3>
+          <p className="text-4xl font-bold text-green-600 mt-2">
+            {totalRevenue.toLocaleString('tr-TR', { style: 'currency', currency: 'TRY' })}
           </p>
         </div>
-        
-        <div className="bg-white p-6 rounded-lg shadow-md border-l-4 border-purple-500">
-          <h3 className="text-lg font-semibold text-gray-700">Aktif Ürünler</h3>
-          <p className="text-3xl font-bold text-purple-600 mt-2">{activeProducts}</p>
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+           <h3 className="text-gray-500 font-medium text-sm uppercase tracking-wider">Aktif Ürünler</h3>
+          <p className="text-4xl font-bold text-blue-600 mt-2">{activeProducts}</p>
         </div>
       </div>
 
-      {/* Günlük Ciro Grafiği */}
-      <div className="mt-8 bg-white p-6 rounded-lg shadow-md">
-        <h2 className="text-2xl font-semibold text-gray-800">Günlük Ciro Grafiği</h2>
-        <div className="h-64 bg-gray-100 rounded-lg mt-4 flex items-center justify-center border-2 border-dashed border-gray-300">
-          <div className="text-center">
-            <p className="text-gray-500 text-lg">📊 Grafik Alanı</p>
-            <p className="text-sm text-gray-400 mt-2">Chart.js veya Recharts entegrasyonu</p>
-          </div>
+      {/* Son Siparişler Tablosu */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <div className="px-6 py-4 border-b border-gray-100 bg-gray-50/50">
+          <h2 className="text-lg font-semibold text-gray-800">Son Siparişler</h2>
         </div>
-      </div>
-
-      {/* Son Siparişler */}
-      <div className="mt-8 bg-white p-6 rounded-lg shadow-md">
-        <h2 className="text-2xl font-semibold text-gray-800">Son Siparişler</h2>
-        <div className="mt-4 overflow-x-auto">
-          <table className="w-full table-auto">
-            <thead>
-              <tr className="bg-gray-50">
-                <th className="px-4 py-2 text-left text-sm font-semibold text-gray-600">#ID</th>
-                <th className="px-4 py-2 text-left text-sm font-semibold text-gray-600">Müşteri</th>
-                <th className="px-4 py-2 text-left text-sm font-semibold text-gray-600">Durum</th>
-                <th className="px-4 py-2 text-left text-sm font-semibold text-gray-600">Tip</th>
-                <th className="px-4 py-2 text-left text-sm font-semibold text-gray-600">Tutar</th>
-                <th className="px-4 py-2 text-left text-sm font-semibold text-gray-600">Tarih</th>
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead className="bg-gray-50 text-gray-600 text-xs uppercase font-semibold">
+              <tr>
+                <th className="px-6 py-3 text-left">#ID</th>
+                <th className="px-6 py-3 text-left">Müşteri</th>
+                <th className="px-6 py-3 text-left">Durum</th>
+                <th className="px-6 py-3 text-left">Tip</th>
+                <th className="px-6 py-3 text-right">Tutar</th>
               </tr>
             </thead>
-            <tbody>
-              {allOrders.slice(0, 10).map((order) => (
-                <tr key={order.id} className="border-t hover:bg-gray-50">
-                  <td className="px-4 py-3 text-sm text-gray-800">#{order.id}</td>
-                  <td className="px-4 py-3 text-sm text-gray-800">
-                    {order.customerName || order.userName || 'Bilinmiyor'}
-                  </td>
-                  <td className="px-4 py-3">
-                    <span className={`inline-block px-2 py-1 text-xs font-semibold rounded-full ${
-                      order.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                      order.status === 'completed' ? 'bg-green-100 text-green-800' :
-                      'bg-gray-100 text-gray-800'
-                    }`}>
-                      {order.status}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3 text-sm text-gray-600">{order.orderType}</td>
-                  <td className="px-4 py-3 text-sm font-semibold text-gray-800">
-                    {(order.total / 100).toFixed(2)} ₺
-                  </td>
-                  <td className="px-4 py-3 text-sm text-gray-600">
-                    {new Date(order.createdAt).toLocaleDateString('tr-TR')}
-                  </td>
-                </tr>
-              ))}
+            <tbody className="divide-y divide-gray-100">
+              {allOrders.length > 0 ? (
+                allOrders.slice(0, 10).map((order: any) => (
+                  <tr key={order.id} className="hover:bg-gray-50 transition-colors">
+                    <td className="px-6 py-4 text-sm font-medium text-gray-900">#{order.id}</td>
+                    <td className="px-6 py-4 text-sm text-gray-600">{order.customerName || 'Misafir'}</td>
+                    <td className="px-6 py-4 text-sm">
+                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${order.status === 'Tamamlandı' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
+                        {order.status}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-600">{order.orderType || order.order_type}</td>
+                    <td className="px-6 py-4 text-sm font-bold text-gray-800 text-right">
+                      {Number(order.total).toLocaleString('tr-TR', { minimumFractionDigits: 2 })} ₺
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr><td colSpan={5} className="p-6 text-center text-gray-500">Sipariş yok.</td></tr>
+              )}
             </tbody>
           </table>
-          
-          {allOrders.length === 0 && (
-            <div className="text-center py-8">
-              <p className="text-gray-500">Henüz sipariş bulunmuyor.</p>
-            </div>
-          )}
         </div>
       </div>
     </div>

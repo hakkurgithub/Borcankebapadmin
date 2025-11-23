@@ -9,6 +9,7 @@ import WhatsAppOrderModal from '../components/WhatsAppOrderModal';
 import ReservationModal from '../components/ReservationModal';
 import AdminPanel from '../components/AdminPanel';
 import { adminConfig } from '../lib/admin';
+import AdBanner from "../components/AdBanner";
 
 export default function Home() {
   const { content } = useContent();
@@ -48,11 +49,14 @@ export default function Home() {
       {/* Hero Section */}
       <section className="relative w-full h-[600px] flex items-center justify-center text-gray-800 text-center overflow-hidden bg-white">
         {/* Background Image */}
-        <img 
-          src="https://raw.githubusercontent.com/hakkurgithub/images/main/borcan-kebap-personeli.png"
-          alt="Borcan Kebap Personeli"
-          className="absolute inset-0 w-full h-full object-contain opacity-90"
-        />
+        <div className="absolute inset-0 w-full h-full">
+            <img 
+            src="https://raw.githubusercontent.com/hakkurgithub/images/main/borcan-kebap-personeli.png"
+            alt="Borcan Kebap Personeli"
+            className="w-full h-full object-contain opacity-90"
+            />
+        </div>
+        
         <div className="relative z-10 p-4">
           <h1 className="text-4xl sm:text-6xl font-extrabold mb-4 font-['Pacifico'] leading-tight text-red-700">
             {content.restaurantName}
@@ -74,6 +78,16 @@ export default function Home() {
         </div>
       </section>
 
+      {/* --- REKLAM ALANI (Hero ve Popüler Ürünler Arası) --- */}
+      <div className="container mx-auto px-4 mt-8">
+        <AdBanner 
+            dataAdSlot="1234567890" 
+            dataAdFormat="auto"
+            dataFullWidthResponsive={true}
+        />
+      </div>
+      {/* ----------------------------------------------------- */}
+
       {/* Popüler Ürünler */}
       <section className="py-16 px-4">
         <div className="container mx-auto">
@@ -87,12 +101,20 @@ export default function Home() {
                 className="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col hover:shadow-2xl transition-shadow duration-300"
               >
                 <div className="relative w-full h-48">
-                  <Image
-                    src={item.image}
-                    alt={item.name}
-                    fill
-                    className="object-cover"
-                  />
+                  <div className="w-full h-full relative">
+                    {item.image ? (
+                        <Image
+                        src={item.image}
+                        alt={item.name}
+                        fill
+                        className="object-cover"
+                        />
+                    ) : (
+                        <div className="w-full h-full bg-gray-200 flex items-center justify-center text-gray-500">
+                            Resim Yok
+                        </div>
+                    )}
+                  </div>
                 </div>
                 <div className="p-5 flex-1 flex flex-col">
                   <h3 className="text-xl font-semibold mb-2">{item.name}</h3>
@@ -105,7 +127,7 @@ export default function Home() {
                       onClick={() => handleAddToCart(item)}
                       className="bg-red-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-red-700 transition-colors"
                     >
-                      <i className="ri-shopping-cart-fill mr-2"></i>Ekle
+                      Ekle
                     </button>
                   </div>
                 </div>
@@ -118,7 +140,7 @@ export default function Home() {
       {/* Hakkımızda Section */}
       <section className="bg-white py-16 px-4">
         <div className="container mx-auto flex flex-col md:flex-row items-center gap-12">
-          <div className="md:w-1/2 relative h-[350px] rounded-xl overflow-hidden shadow-lg">
+          <div className="md:w-1/2 relative h-[350px] w-full rounded-xl overflow-hidden shadow-lg">
             <Image
               src="https://raw.githubusercontent.com/hakkurgithub/images/main/hero.png"
               alt="Hakkımızda"
@@ -149,21 +171,18 @@ export default function Home() {
           <h2 className="text-4xl font-bold text-center mb-12">İletişim</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <div className="bg-white p-8 rounded-xl shadow-lg text-center transition-all duration-300 ease-in-out hover:shadow-2xl hover:-translate-y-2">
-              <i className="ri-map-pin-line text-4xl text-red-600 mb-4"></i>
               <h3 className="text-xl font-semibold mb-2">Adres</h3>
               <p className="text-gray-700">
                 {content.address}
               </p>
             </div>
             <div className="bg-white p-8 rounded-xl shadow-lg text-center transition-all duration-300 ease-in-out hover:shadow-2xl hover:-translate-y-2">
-              <i className="ri-phone-line text-4xl text-red-600 mb-4"></i>
               <h3 className="text-xl font-semibold mb-2">Telefon</h3>
               <p className="text-gray-700">
                 {content.phone}
               </p>
             </div>
             <div className="bg-white p-8 rounded-xl shadow-lg text-center transition-all duration-300 ease-in-out hover:shadow-2xl hover:-translate-y-2">
-              <i className="ri-mail-line text-4xl text-red-600 mb-4"></i>
               <h3 className="text-xl font-semibold mb-2">E-posta</h3>
               <p className="text-gray-700">info@borcankebap.com</p>
             </div>

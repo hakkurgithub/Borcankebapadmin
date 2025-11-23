@@ -5,13 +5,13 @@ import { useCart } from "./CartProvider";
 import { useContent } from "../hooks/useContent";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
-import { Menu, X, Phone, MessageCircle, User, Settings } from "lucide-react";
+import { Menu, X, Phone, MessageCircle, ShoppingCart, User, Settings, LogOut } from "lucide-react";
 import { useSession } from "next-auth/react";
 
 export default function Navbar() {
   const { content } = useContent();
   const { getTotalItems } = useCart();
-  const { data: session, status } = useSession();
+  const { data: session } = useSession(); // status yüklenmesini beklemiyoruz, sadece session varsa göster
   const [itemCount, setItemCount] = useState(0);
   const [animate, setAnimate] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -28,199 +28,165 @@ export default function Navbar() {
   }, [getTotalItems, itemCount]);
 
   const phoneNumber = content.phone.replace(/[^0-9]/g, "");
-  const whatsappMessage = encodeURIComponent("Merhaba, sipariş vermek istiyorum.");
+  // 2. İSTEK: WhatsApp mesajı güncellendi
+  const whatsappMessage = encodeURIComponent("Merhaba, ben Borcan Kebap internet sitesinden size ulaşıyorum, sipariş vermek istiyorum.");
 
   return (
-    <nav className="bg-red-700 text-white py-4 shadow-md sticky top-0 z-50">
-      <div className="container mx-auto flex justify-between items-center px-4">
-        <Link
-          href="/"
-          className="text-2xl font-bold tracking-wide hover:text-yellow-300 transition"
-        >
-          {content.restaurantName}
-        </Link>
-
-        <div className="hidden md:flex space-x-6 items-center">
-          <NavLink href="/" label="Ana Sayfa" active={pathname === "/"} />
-          <NavLink href="/menu" label="Menü" active={pathname === "/menu"} />
-          <NavLink href="/about" label="Hakkımızda" active={pathname === "/about"} />
-          <NavLink href="/contact" label="İletişim" active={pathname === "/contact"} />
-
+    <>
+      <nav className="bg-red-700 text-white py-4 shadow-md sticky top-0 z-50">
+        <div className="container mx-auto flex justify-between items-center px-4">
           <Link
-            href="/cart"
-            className={`relative bg-yellow-400 text-red-900 px-4 py-2 rounded-full font-semibold hover:bg-yellow-300 transition ${
-              animate ? "scale-110 transition-transform" : ""
-            }`}
+            href="/"
+            className="text-2xl font-bold tracking-wide hover:text-yellow-300 transition"
           >
-            🛒 Sepetim
-            {itemCount > 0 && (
-              <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
-                {itemCount}
-              </span>
-            )}
+            {content.restaurantName}
           </Link>
 
-          {/* User Menu */}
-          {status === "loading" ? (
-            <div className="w-8 h-8 bg-white/20 rounded-full animate-pulse"></div>
-          ) : session ? (
-            <div className="relative">
-              <button
-                onClick={() => setUserMenuOpen(!userMenuOpen)}
-                className="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-red-600 transition-colors"
-              >
-                <User size={20} />
-                <span className="text-sm">{session.user.name?.split(' ')[0]}</span>
-              </button>
+          {/* Desktop Menü */}
+          <div className="hidden md:flex space-x-6 items-center">
+            <NavLink href="/" label="Ana Sayfa" active={pathname === "/"} />
+            <NavLink href="/menu" label="Menü" active={pathname === "/menu"} />
+            <NavLink href="/about" label="Hakkımızda" active={pathname === "/about"} />
+            <NavLink href="/contact" label="İletişim" active={pathname === "/contact"} />
 
-              {userMenuOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-white text-black rounded-lg shadow-lg border py-2 z-50">
-                  <div className="px-3 py-2 border-b">
-                    <p className="text-sm font-medium">{session.user.name}</p>
-                    <p className="text-xs text-gray-600">{session.user.email}</p>
+            {/* Masaüstü Sepet Butonu */}
+            <Link
+              href="/cart"
+              className={`relative bg-yellow-400 text-red-900 px-4 py-2 rounded-full font-semibold hover:bg-yellow-300 transition flex items-center gap-2 ${
+                animate ? "scale-110 transition-transform" : ""
+              }`}
+            >
+              <ShoppingCart size={20} />
+              <span>Sepetim</span>
+              {itemCount > 0 && (
+                <span className="bg-red-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                  {itemCount}
+                </span>
+              )}
+            </Link>
+
+            {/* 1. İSTEK: Giriş butonu kaldırıldı. Sadece giriş yapılmışsa (Admin) User Menu görünür */}
+            {session?.user && (
+              <div className="relative">
+                <button
+                  onClick={() => setUserMenuOpen(!userMenuOpen)}
+                  className="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-red-600 transition-colors border border-red-500"
+                >
+                  <User size={20} />
+                  <span className="text-sm font-medium">{session.user.name?.split(' ')[0]}</span>
+                </button>
+
+                {userMenuOpen && (
+                  <div className="absolute right-0 mt-2 w-56 bg-white text-black rounded-lg shadow-xl border py-2 z-50 animate-in fade-in slide-in-from-top-2">
+                    <div className="px-4 py-3 border-b bg-gray-50">
+                      <p className="text-sm font-bold text-gray-800">{session.user.name}</p>
+                      <p className="text-xs text-gray-500 truncate">{session.user.email}</p>
+                    </div>
+                    
+                    {(session.user as any).role === 'manager' && (
+                      <Link
+                        href="/manager"
+                        className="flex items-center space-x-2 px-4 py-3 hover:bg-red-50 text-red-600 transition-colors"
+                        onClick={() => setUserMenuOpen(false)}
+                      >
+                        <Settings size={18} />
+                        <span className="text-sm font-medium">Yönetim Paneli</span>
+                      </Link>
+                    )}
+                    
+                    <Link
+                      href="/api/auth/signout"
+                      className="flex items-center space-x-2 px-4 py-3 hover:bg-gray-100 transition-colors text-gray-700"
+                    >
+                      <LogOut size={18} />
+                      <span className="text-sm">Çıkış Yap</span>
+                    </Link>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* Mobil Menü Butonu */}
+          <button
+            className="md:hidden text-white text-3xl focus:outline-none p-2"
+            onClick={() => setMenuOpen(!menuOpen)}
+          >
+            {menuOpen ? <X size={28} /> : <Menu size={28} />}
+          </button>
+        </div>
+
+        {/* Mobil Açılır Menü */}
+        {menuOpen && (
+          <div className="md:hidden bg-red-800 text-white px-4 py-6 space-y-4 absolute w-full shadow-xl border-t border-red-600 h-screen z-40">
+            <MobileLink href="/" label="Ana Sayfa" setMenuOpen={setMenuOpen} />
+            <MobileLink href="/menu" label="Menü" setMenuOpen={setMenuOpen} />
+            <MobileLink href="/about" label="Hakkımızda" setMenuOpen={setMenuOpen} />
+            <MobileLink href="/contact" label="İletişim" setMenuOpen={setMenuOpen} />
+            
+            {/* Giriş yapılmışsa mobilde de admin linklerini göster */}
+            {session?.user && (
+               <div className="pt-4 border-t border-red-600 mt-4">
+                  <div className="flex items-center gap-3 mb-4 px-2">
+                    <div className="bg-red-900 p-2 rounded-full"><User size={20} /></div>
+                    <div>
+                      <p className="text-sm font-bold">{session.user.name}</p>
+                      <p className="text-xs text-red-200">Yönetici Hesabı</p>
+                    </div>
                   </div>
                   
-                  {session.user.role === 'manager' ? (
-                    <Link
-                      href="/manager"
-                      className="flex items-center space-x-2 px-3 py-2 hover:bg-gray-100 transition-colors"
-                      onClick={() => setUserMenuOpen(false)}
+                  {(session.user as any).role === 'manager' && (
+                    <Link 
+                      href="/manager" 
+                      onClick={() => setMenuOpen(false)}
+                      className="flex items-center gap-2 bg-white text-red-700 p-3 rounded-lg font-bold mb-3"
                     >
-                      <Settings size={16} />
-                      <span className="text-sm">Yönetim Paneli</span>
-                    </Link>
-                  ) : (
-                    <Link
-                      href="/dashboard"
-                      className="flex items-center space-x-2 px-3 py-2 hover:bg-gray-100 transition-colors"
-                      onClick={() => setUserMenuOpen(false)}
-                    >
-                      <User size={16} />
-                      <span className="text-sm">Hesabım</span>
+                      <Settings size={20} /> Yönetim Paneline Git
                     </Link>
                   )}
-                  
-                  <Link
-                    href="/api/auth/signout"
-                    className="flex items-center space-x-2 px-3 py-2 hover:bg-gray-100 transition-colors text-red-600"
+
+                  <Link 
+                    href="/api/auth/signout" 
+                    className="flex items-center gap-2 text-red-200 p-2 hover:text-white"
                   >
-                    <span className="text-sm">Çıkış</span>
+                    <LogOut size={18} /> Çıkış Yap
                   </Link>
-                </div>
-              )}
-            </div>
-          ) : (
-            <Link
-              href="/api/auth/signin"
-              className="flex items-center space-x-2 px-4 py-2 bg-white text-red-700 rounded-lg font-semibold hover:bg-gray-100 hover:shadow-md transition-all duration-200 transform hover:scale-105"
-            >
-              <User size={18} />
-              <span>Giriş</span>
-            </Link>
-          )}
-        </div>
-
-        <button
-          className="md:hidden text-white text-3xl focus:outline-none"
-          onClick={() => setMenuOpen(!menuOpen)}
-        >
-          {menuOpen ? <X size={28} /> : <Menu size={28} />}
-        </button>
-      </div>
-
-      {menuOpen && (
-        <div className="md:hidden bg-red-800 text-white px-4 py-4 space-y-4 pb-20">
-          <MobileLink href="/" label="Ana Sayfa" setMenuOpen={setMenuOpen} />
-          <MobileLink href="/menu" label="Menü" setMenuOpen={setMenuOpen} />
-          <MobileLink href="/about" label="Hakkımızda" setMenuOpen={setMenuOpen} />
-          <MobileLink href="/contact" label="İletişim" setMenuOpen={setMenuOpen} />
-
-          <Link
-            href="/cart"
-            onClick={() => setMenuOpen(false)}
-            className={`relative bg-yellow-400 text-red-900 px-4 py-2 rounded-full font-semibold hover:bg-yellow-300 transition block text-center ${
-              animate ? "scale-110 transition-transform" : ""
-            }`}
-          >
-            🛒 Sepetim
-            {itemCount > 0 && (
-              <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
-                {itemCount}
-              </span>
+               </div>
             )}
-          </Link>
+          </div>
+        )}
+      </nav>
 
-          {/* Mobile User Menu */}
-          {status === "loading" ? (
-            <div className="w-full bg-white/20 rounded-lg p-3 animate-pulse text-center">
-              Yükleniyor...
-            </div>
-          ) : session ? (
-            <div className="space-y-2">
-              <div className="bg-red-700 p-3 rounded-lg">
-                <p className="font-medium">{session.user.name}</p>
-                <p className="text-sm text-red-200">{session.user.email}</p>
-              </div>
-              
-              {session.user.role === 'manager' ? (
-                <Link
-                  href="/manager"
-                  onClick={() => setMenuOpen(false)}
-                  className="flex items-center space-x-2 bg-white text-red-700 p-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
-                >
-                  <Settings size={18} />
-                  <span>Yönetim Paneli</span>
-                </Link>
-              ) : (
-                <Link
-                  href="/dashboard"
-                  onClick={() => setMenuOpen(false)}
-                  className="flex items-center space-x-2 bg-white text-red-700 p-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
-                >
-                  <User size={18} />
-                  <span>Hesabım</span>
-                </Link>
-              )}
-              
-              <Link
-                href="/api/auth/signout"
-                onClick={() => setMenuOpen(false)}
-                className="flex items-center justify-center bg-red-600 text-white p-3 rounded-lg font-semibold hover:bg-red-500 transition-colors"
-              >
-                Çıkış Yap
-              </Link>
-            </div>
-          ) : (
-            <Link
-              href="/api/auth/signin"
-              onClick={() => setMenuOpen(false)}
-              className="flex items-center justify-center space-x-2 bg-white text-red-700 p-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
-            >
-              <User size={18} />
-              <span>Giriş Yap</span>
-            </Link>
-          )}
-        </div>
-      )}
-
-      <div className="fixed bottom-4 left-0 right-0 flex justify-center space-x-4 md:hidden z-50">
-        <a
-          href={`tel:${phoneNumber}`}
-          className="bg-green-600 text-white flex items-center gap-2 px-5 py-3 rounded-full shadow-lg hover:bg-green-500 transition"
-        >
-          <Phone size={18} /> Ara
-        </a>
-
+      {/* 3. İSTEK: HAREKETLİ (STICKY) BUTONLAR - MOBİL İÇİN */}
+      <div className="fixed bottom-6 right-6 flex flex-col gap-4 z-50 md:hidden pointer-events-none">
+        {/* WhatsApp Butonu (Pointer events auto ile tıklanabilir yapıyoruz) */}
         <a
           href={`https://wa.me/${phoneNumber}?text=${whatsappMessage}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="bg-emerald-500 text-white flex items-center gap-2 px-5 py-3 rounded-full shadow-lg hover:bg-emerald-400 transition"
+          className="pointer-events-auto bg-green-500 text-white p-4 rounded-full shadow-2xl flex items-center justify-center border-2 border-white hover:bg-green-600 transition-transform hover:scale-110 active:scale-95"
         >
-          <MessageCircle size={18} /> WhatsApp
+          <MessageCircle size={28} />
         </a>
+
+        {/* Sepet Butonu (Sticky) */}
+        <Link
+          href="/cart"
+          className={`pointer-events-auto bg-yellow-400 text-red-900 p-4 rounded-full shadow-2xl flex items-center justify-center border-2 border-white transition-all hover:scale-110 active:scale-95 ${
+             animate ? "scale-125 bg-yellow-300" : ""
+          }`}
+        >
+          <div className="relative">
+            <ShoppingCart size={28} />
+            {itemCount > 0 && (
+              <span className="absolute -top-3 -right-3 bg-red-600 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center border-2 border-yellow-400 shadow-sm">
+                {itemCount}
+              </span>
+            )}
+          </div>
+        </Link>
       </div>
-    </nav>
+    </>
   );
 }
 
@@ -228,8 +194,8 @@ function NavLink({ href, label, active }: { href: string; label: string; active:
   return (
     <Link
       href={href}
-      className={`hover:text-yellow-300 transition ${
-        active ? "text-yellow-300 font-semibold" : ""
+      className={`hover:text-yellow-300 transition px-3 py-2 rounded-md ${
+        active ? "bg-red-800 text-yellow-300 font-semibold" : ""
       }`}
     >
       {label}
@@ -250,7 +216,7 @@ function MobileLink({
     <Link
       href={href}
       onClick={() => setMenuOpen(false)}
-      className="block hover:text-yellow-300 transition"
+      className="block text-lg font-medium hover:text-yellow-300 transition py-2 px-2 rounded hover:bg-red-800"
     >
       {label}
     </Link>

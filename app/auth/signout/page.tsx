@@ -1,5 +1,7 @@
-import { signOut } from "../../../lib/auth"
-import Link from "next/link"
+"use client"; // Client Component olduğunu belirtir
+
+import { signOut } from "next-auth/react"; // DOĞRU İMPORT
+import Link from "next/link";
 
 export default function SignOut() {
   return (
@@ -13,19 +15,13 @@ export default function SignOut() {
         </div>
         
         <div className="mt-8 space-y-4">
-          <form
-            action={async () => {
-              "use server"
-              await signOut({ redirectTo: "/" })
-            }}
+          {/* Server Action yerine onClick kullanıyoruz */}
+          <button 
+            onClick={() => signOut({ callbackUrl: "/" })}
+            className="w-full flex items-center justify-center px-4 py-3 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors"
           >
-            <button 
-              type="submit" 
-              className="w-full flex items-center justify-center px-4 py-3 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors"
-            >
-              Çıkış Yap
-            </button>
-          </form>
+            Çıkış Yap
+          </button>
           
           <Link 
             href="/" 

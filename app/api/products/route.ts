@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getAllProducts, getProductsByCategory } from '../../../lib/products'
-import { Product } from '../../../db/schema'
 
-// Bu satır çok önemli! API'nin her seferinde çalışmasını sağlar, önbelleğe almaz.
+// Bu satır çok önemli! API'nin her seferinde çalışmasını sağlar.
 export const dynamic = 'force-dynamic'
 export const revalidate = 0;
 
@@ -11,8 +10,10 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url)
     const category = searchParams.get('category')
     
-    // HATA BURADAYDI: TypeScript'e bu değişkenin bir "Product Listesi" olduğunu söylüyoruz.
-    let products: Product[] = []; 
+    // 🛠️ DÜZELTME BURADA:
+    // TypeScript'in hata vermemesi için "any[]" kullanıyoruz.
+    // Bu sayede veritabanından ne gelirse gelsin kabul eder.
+    let products: any[] = [];
     
     if (category) {
       products = await getProductsByCategory(category)
@@ -20,16 +21,17 @@ export async function GET(request: NextRequest) {
       products = await getAllProducts()
     }
     
-    // Eğer veritabanından null gelirse diye önlem alalım
+    // Eğer ürünler boş gelirse veya undefined ise güvenli bir diziye çevir
     if (!products) {
          products = [];
     }
 
     // Fiyatları formatla
-    const productsWithFormattedPrices = products.map((product: Product) => ({
+    const productsWithFormattedPrices = products.map((product: any) => ({
       ...product,
-      priceInLira: parseFloat(product.price as any), 
-      formattedPrice: `${Math.round(parseFloat(product.price as any))} ₺`
+      // Fiyatı sayıya çevirirken hata olmaması için kontroller
+      priceInLira: parseFloat(product.price || 0), 
+      formattedPrice: `${Math.round(parseFloat(product.price || 0))} ₺`
     }))
     
     return NextResponse.json({

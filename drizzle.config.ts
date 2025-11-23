@@ -1,12 +1,10 @@
-import type { Config } from 'drizzle-kit'
+import { defineConfig } from "drizzle-kit";
 
-export default {
-  schema: './db/schema.ts',
-  out: './drizzle/migrations',
-  dialect: 'postgresql',
+export default defineConfig({
+  schema: "./lib/schema.ts",
+  out: "./drizzle",
+  dialect: "postgresql", // Neon için doğru ayar budur
   dbCredentials: {
     url: process.env.POSTGRES_URL!,
   },
-  verbose: true,
-  strict: true,
-} satisfies Config
+});

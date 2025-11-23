@@ -1,22 +1,24 @@
-// middleware.ts
-import { auth } from "./lib/auth";
+import { withAuth } from "next-auth/middleware";
 import { NextResponse } from "next/server";
 
-export default auth((req) => {
-  const { pathname } = req.nextUrl;
-  const userRole = req.auth?.user?.role;
-
-  // /manager rotasını sadece 'manager' rolündeki kullanıcılar görebilir
-  if (pathname.startsWith("/manager") && userRole !== "manager") {
-    return NextResponse.redirect(new URL("/", req.url));
+export default withAuth(
+  function middleware(req) {
+    return NextResponse.next();
+  },
+  {
+    callbacks: {
+      authorized: ({ token }) => !!token, // Token varsa geçiş izni ver
+    },
+    pages: {
+      signIn: "/login", // Giriş yapılmamışsa buraya at
+    },
   }
-  
-  // /dashboard rotasını sadece giriş yapmış kullanıcılar görebilir
-  if (pathname.startsWith("/dashboard") && !req.auth) {
-    return NextResponse.redirect(new URL("/api/auth/signin", req.url));
-  }
-});
+);
 
+// Sadece bu yolları koru
 export const config = {
-  matcher: ["/manager/:path*", "/dashboard/:path*"],
+  matcher: [
+    "/manager/:path*",
+    "/dashboard/:path*"
+  ],
 };

@@ -1,57 +1,59 @@
-import NextAuth from "next-auth"
-import GitHub from "next-auth/providers/github"
-import Credentials from "next-auth/providers/credentials"
+import { NextAuthOptions, getServerSession } from "next-auth";
+import CredentialsProvider from "next-auth/providers/credentials";
 
-export const { handlers, auth, signIn, signOut } = NextAuth({  
-  trustHost: true,
+export const authOptions: NextAuthOptions = {
+  // Vercel ortam değişkenlerinden gizli anahtarı alır
+  secret: process.env.AUTH_SECRET,
   
   providers: [
-    // Manager credentials provider
-    Credentials({
-      name: "Manager",
+    // Sadece Kullanıcı Adı / Şifre Girişi
+    CredentialsProvider({
+      name: "Yönetici Girişi",
       credentials: {
-        username: { label: "Username", type: "text", placeholder: "manager" },
-        password: { label: "Password", type: "password", placeholder: "password" }
+        username: { label: "Kullanıcı Adı", type: "text" },
+        password: { label: "Şifre", type: "password" },
       },
       async authorize(credentials) {
-        if (credentials?.username === "manager" && credentials?.password === "Borcan2025") {
+        // Kullanıcı adı ve şifre kontrolü
+        // Şifreyi .env dosyasından (ADMIN_PASSWORD) veya sabit olarak "Borcan2025"ten alır
+        const validPassword = process.env.ADMIN_PASSWORD || "Borcan2025";
+
+        if (
+          (credentials?.username === "admin" || credentials?.username === "manager") && 
+          credentials?.password === validPassword
+        ) {
           return {
-            id: "1", 
-            name: "Manager",
-            email: "manager@karagozdoner.com",
-            role: "manager" as const,
-          }
+            id: "1",
+            name: "Yönetici",
+            email: "admin@borcankebap.com",
+            role: "manager",
+          };
         }
-        return null
-      }
-    }),
-    // GitHub OAuth (gerçek credentials gerekli)
-    GitHub({
-      clientId: process.env.AUTH_GITHUB_ID!,
-      clientSecret: process.env.AUTH_GITHUB_SECRET!,
+        
+        // Hatalı giriş
+        return null;
+      },
     }),
   ],
-  
-  session: {
-    strategy: "jwt",
+  pages: {
+    signIn: "/login", // Özel giriş sayfamız
+    error: "/auth/error", // Hata sayfası
   },
-  
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.role = user.role || 'b2b' // User objesinden role alıyoruz
+        token.role = user.role;
       }
-      return token
+      return token;
     },
-    
     async session({ session, token }) {
-      if (token) {
-        session.user.id = token.sub!
-        session.user.role = token.role as "b2b" | "manager"
+      if (session.user) {
+        (session.user as any).role = token.role;
       }
-      return session
+      return session;
     },
   },
-  
-  debug: process.env.NODE_ENV === "development",
-})
+};
+
+// Server-side kullanım için helper
+export const auth = () => getServerSession(authOptions);

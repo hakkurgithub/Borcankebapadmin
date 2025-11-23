@@ -1,220 +1,271 @@
-// app/manager/products/page.tsx
-import { db } from "@/db/drizzle"
-import { products } from "@/db/schema"
-import { eq } from "drizzle-orm"
-import { revalidatePath } from "next/cache"
-import { redirect } from "next/navigation"
+"use client";
 
-// Server Actions
-async function updateProduct(formData: FormData) {
-  "use server"
-  
-  try {
-    const id = parseInt(formData.get("id") as string)
-    const name = formData.get("name") as string
-    const priceStr = formData.get("price") as string
-    const price = priceStr // Direkt TL cinsinden string olarak kaydet (numeric type)
-    const category = formData.get("category") as string
-    const description = formData.get("description") as string || ''
-    const image = formData.get("image") as string || ''
-    
-    console.log('✅ Updating product:', { id, name, price, category, image })
-    
-    await db.update(products)
-      .set({ 
-        name, 
-        price, 
-        category,
-        description,
-        image 
-      })
-      .where(eq(products.id, id))
-    
-    console.log('✅ Product updated successfully:', id)
-    revalidatePath("/manager/products")
-  } catch (error) {
-    console.error('❌ Error updating product:', error)
-  }
+import { useState, useEffect } from "react";
+import { addProduct, deleteProduct, updateProduct, getManagerProducts } from "../../../lib/actions";
+import Link from "next/link";
+import Image from "next/image";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+
+interface ProductForm {
+  id?: number;
+  name: string;
+  description: string;
+  price: string;
+  category: string;
+  image: string;
+  isActive: number; // 1: Aktif, 0: Pasif
 }
 
-async function toggleProductStatus(formData: FormData) {
-  "use server"
-  
-  try {
-    const id = parseInt(formData.get("id") as string)
-    const currentStatus = formData.get("currentStatus") === "true"
-    
-    console.log('🔄 Toggling product status:', { id, currentStatus, newStatus: !currentStatus })
-    
-    await db.update(products)
-      .set({ isActive: currentStatus ? 0 : 1 })
-      .where(eq(products.id, id))
-    
-    console.log('✅ Product status toggled successfully:', id)
-    revalidatePath("/manager/products")
-  } catch (error) {
-    console.error('❌ Error toggling product status:', error)
-  }
-}
+const initialForm: ProductForm = {
+  name: "",
+  description: "",
+  price: "",
+  category: "Kebaplar & Izgaralar",
+  image: "",
+  isActive: 1 // Varsayılan olarak aktif
+};
 
-export default async function ManagerProductsPage() {
-  // Get all products from database
-  const allProducts = await db.select().from(products).orderBy(products.id)
+export default function ProductsManager() {
+  const { data: session, status } = useSession();
+  const router = useRouter();
   
-  return (
-    <div className="container mx-auto p-4">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-gray-800">Ürün Yönetimi</h1>
-        <a 
-          href="/manager" 
-          className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700"
-        >
-          ← Panele Dön
-        </a>
-      </div>
+  const [products, setProducts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [formData, setFormData] = useState<ProductForm>(initialForm);
+  const [isEditing, setIsEditing] = useState(false);
+
+  // İstemci tarafı güvenlik kontrolü (Middleware'e ek olarak)
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.push("/login");
+    }
+  }, [status, router]);
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      loadProducts();
+    }
+  }, [status]);
+
+  const loadProducts = async () => {
+    setLoading(true);
+    try {
+      const data = await getManagerProducts();
+      setProducts(data);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    try {
+      if (isEditing && formData.id) {
+        await updateProduct(formData.id, formData);
+        alert("Ürün başarıyla güncellendi! ✅");
+      } else {
+        await addProduct(formData);
+        alert("Yeni ürün eklendi! 🎉");
+      }
       
-      <div className="bg-white rounded-lg shadow-md p-6">
-        <div className="grid gap-6">
-          {allProducts.map((product) => (
-            <div 
-              key={product.id} 
-              className="border border-gray-200 rounded-lg p-4 hover:shadow-lg transition-shadow"
+      setIsModalOpen(false);
+      setFormData(initialForm);
+      setIsEditing(false);
+      loadProducts();
+    } catch (error) {
+      alert("İşlem sırasında bir hata oluştu!");
+    }
+  };
+
+  const handleEdit = (item: any) => {
+    setFormData({
+      id: item.id,
+      name: item.name,
+      description: item.description || "",
+      price: item.price.toString(),
+      category: item.category || "Diğer",
+      image: item.image || "",
+      isActive: item.isActive ?? item.is_active ?? 1
+    });
+    setIsEditing(true);
+    setIsModalOpen(true);
+  };
+
+  const handleDelete = async (id: number) => {
+    if (confirm("Bu ürünü menüden tamamen silmek istediğinize emin misiniz? (Pasife almak için düzenle diyebilirsiniz)")) {
+      await deleteProduct(id);
+      loadProducts();
+    }
+  };
+
+  if (status === "loading") return <div className="p-10 text-center">Yükleniyor...</div>;
+
+  return (
+    <div className="min-h-screen bg-gray-50 p-4 md:p-8">
+      <div className="max-w-6xl mx-auto">
+        <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-800">Menü Yönetimi</h1>
+            <p className="text-gray-500">Ürünleri ekleyin, düzenleyin veya yayından kaldırın.</p>
+          </div>
+          <div className="flex gap-3 w-full md:w-auto">
+            <Link href="/manager" className="px-4 py-2 border bg-white rounded-lg text-gray-700 text-center flex-1 md:flex-none hover:bg-gray-50">
+              Geri Dön
+            </Link>
+            <button 
+              onClick={() => { setIsModalOpen(true); setIsEditing(false); setFormData(initialForm); }}
+              className="px-4 py-2 bg-green-600 text-white rounded-lg font-bold shadow flex-1 md:flex-none hover:bg-green-700 text-center"
             >
-              <form action={updateProduct} className="space-y-4">
-                <input type="hidden" name="id" value={product.id} />
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label htmlFor={`name-${product.id}`} className="block text-sm font-medium text-gray-700 mb-1">
-                      Ürün Adı
-                    </label>
-                    <input
-                      id={`name-${product.id}`}
-                      type="text"
-                      name="name"
-                      defaultValue={product.name}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      required
-                    />
-                  </div>
+              + Yeni Ürün
+            </button>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-xl shadow overflow-hidden">
+          <table className="w-full text-left">
+            <thead className="bg-gray-100 text-gray-600 border-b">
+              <tr>
+                <th className="p-4">Ürün</th>
+                <th className="p-4 hidden md:table-cell">Kategori</th>
+                <th className="p-4">Fiyat</th>
+                <th className="p-4 hidden md:table-cell">Durum</th>
+                <th className="p-4 text-right">İşlem</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y">
+              {products.map((item) => (
+                <tr key={item.id} className={`hover:bg-gray-50 transition ${item.isActive === 0 || item.is_active === 0 ? 'bg-red-50' : ''}`}>
+                  <td className="p-4 flex items-center gap-3">
+                    <div className="w-12 h-12 relative rounded-lg overflow-hidden bg-gray-200 flex-shrink-0">
+                        {item.image ? (
+                            <Image src={item.image} alt={item.name} fill className="object-cover" sizes="48px" />
+                        ) : <span className="text-xs flex items-center justify-center h-full text-gray-400">Yok</span>}
+                    </div>
+                    <div>
+                        <span className="font-medium text-gray-900 block">{item.name}</span>
+                        {(item.isActive === 0 || item.is_active === 0) && (
+                            <span className="text-xs text-red-500 font-bold md:hidden"> (PASİF)</span>
+                        )}
+                    </div>
+                  </td>
+                  <td className="p-4 hidden md:table-cell">
+                    <span className="bg-blue-50 text-blue-700 px-2 py-1 rounded text-xs font-medium border border-blue-100">
+                      {item.category}
+                    </span>
+                  </td>
+                  <td className="p-4 font-bold text-gray-800">{item.price} ₺</td>
                   
-                  <div>
-                    <label htmlFor={`price-${product.id}`} className="block text-sm font-medium text-gray-700 mb-1">
-                      Fiyat (₺)
-                    </label>
-                    <input
-                      id={`price-${product.id}`}
-                      type="number"
-                      name="price"
-                      defaultValue={parseFloat(product.price as any).toFixed(2)}
-                      step="0.01"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      required
-                    />
-                  </div>
-                  
-                  <div>
-                    <label htmlFor={`category-${product.id}`} className="block text-sm font-medium text-gray-700 mb-1">
-                      Kategori
-                    </label>
-                    <select
-                      id={`category-${product.id}`}
-                      name="category"
-                      defaultValue={product.category || 'Döner'}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    >
-                      <option value="Kebaplar & Izgaralar">Kebaplar & Izgaralar</option>
-                      <option value="Pide & Lahmacun">Pide & Lahmacun</option>
-                      <option value="Döner">Döner</option>
-                      <option value="Dürüm">Dürüm</option>
-                      <option value="Çorbalar">Çorbalar</option>
-                      <option value="Yan Ürünler">Yan Ürünler</option>
-                      <option value="Tatlılar">Tatlılar</option>
-                      <option value="İçecekler">İçecekler</option>
-                    </select>
-                  </div>
-                  
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Durum
-                    </label>
-                    <div className="flex items-center space-x-2">
-                      <span className={`px-3 py-2 rounded-lg font-medium ${
-                        product.isActive 
-                          ? 'bg-green-100 text-green-800' 
-                          : 'bg-red-100 text-red-800'
-                      }`}>
-                        {product.isActive ? '✓ Aktif' : '✗ Pasif'}
+                  {/* DURUM SÜTUNU */}
+                  <td className="p-4 hidden md:table-cell">
+                    {(item.is_active === 1 || item.isActive === 1) ? (
+                      <span className="text-green-700 bg-green-100 px-2 py-1 rounded-full text-xs font-bold flex items-center w-fit gap-1">
+                        <span className="w-2 h-2 bg-green-600 rounded-full"></span> YAYINDA
                       </span>
-                    </div>
-                  </div>
-                </div>
-                
-                <div>
-                  <label htmlFor={`image-${product.id}`} className="block text-sm font-medium text-gray-700 mb-1">
-                    Resim URL
-                  </label>
-                  <input
-                    id={`image-${product.id}`}
-                    type="url"
-                    name="image"
-                    defaultValue={product.image || ''}
-                    placeholder="https://raw.githubusercontent.com/..."
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                  {product.image && (
-                    <div className="mt-2">
-                      <img 
-                        src={product.image} 
-                        alt={product.name}
-                        className="h-20 w-20 object-cover rounded-lg border"
-                      />
-                    </div>
-                  )}
-                </div>
-                
-                <div>
-                  <label htmlFor={`description-${product.id}`} className="block text-sm font-medium text-gray-700 mb-1">
-                    Açıklama
-                  </label>
-                  <textarea
-                    id={`description-${product.id}`}
-                    name="description"
-                    defaultValue={product.description || ''}
-                    rows={2}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-                
-                <div className="flex gap-3">
-                  <button
-                    type="submit"
-                    className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium"
-                  >
-                    💾 Kaydet
-                  </button>
-                </div>
-              </form>
-              
-              {/* Toggle Status Form - Ayrı form olarak */}
-              <form action={toggleProductStatus} className="inline">
-                <input type="hidden" name="id" value={product.id} />
-                <input type="hidden" name="currentStatus" value={product.isActive ? "true" : "false"} />
-                <button
-                  type="submit"
-                  className={`px-6 py-2 rounded-lg font-medium ${
-                    product.isActive
-                      ? 'bg-red-600 text-white hover:bg-red-700'
-                      : 'bg-green-600 text-white hover:bg-green-700'
-                  }`}
-                >
-                  {product.isActive ? '🔴 Pasif Yap' : '🟢 Aktif Yap'}
-                </button>
-              </form>
-            </div>
-          ))}
+                    ) : (
+                      <span className="text-red-700 bg-red-100 px-2 py-1 rounded-full text-xs font-bold flex items-center w-fit gap-1">
+                        <span className="w-2 h-2 bg-red-600 rounded-full"></span> GİZLİ
+                      </span>
+                    )}
+                  </td>
+
+                  <td className="p-4 text-right space-x-2">
+                    <button onClick={() => handleEdit(item)} className="bg-blue-50 text-blue-600 px-3 py-1 rounded text-sm hover:bg-blue-100 font-medium transition">
+                        Düzenle
+                    </button>
+                    <button onClick={() => handleDelete(item.id)} className="text-gray-400 hover:text-red-600 px-2 py-1 text-sm transition" title="Tamamen Sil">
+                        <i className="ri-delete-bin-line"></i> Sil
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
+
+      {/* MODAL */}
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
+          <div className="bg-white rounded-xl shadow-2xl w-full max-w-lg p-6 max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in duration-200">
+            <h2 className="text-xl font-bold mb-4 text-gray-800 border-b pb-2">{isEditing ? "Ürünü Düzenle" : "Yeni Ürün Ekle"}</h2>
+            
+            <form onSubmit={handleSubmit} className="space-y-4">
+              
+              {/* AKTİF / PASİF SEÇİMİ */}
+              <div className="bg-gray-50 p-3 rounded-lg border border-gray-200">
+                <label className="block text-sm font-bold text-gray-700 mb-2">Ürün Durumu</label>
+                <div className="flex gap-4">
+                    <label className="flex items-center gap-2 cursor-pointer">
+                        <input 
+                            type="radio" 
+                            name="status" 
+                            checked={formData.isActive === 1} 
+                            onChange={() => setFormData({...formData, isActive: 1})}
+                            className="w-4 h-4 text-green-600"
+                        />
+                        <span className="text-sm font-medium text-green-700">Aktif (Menüde Görünür)</span>
+                    </label>
+                    <label className="flex items-center gap-2 cursor-pointer">
+                        <input 
+                            type="radio" 
+                            name="status" 
+                            checked={formData.isActive === 0} 
+                            onChange={() => setFormData({...formData, isActive: 0})}
+                            className="w-4 h-4 text-red-600"
+                        />
+                        <span className="text-sm font-medium text-red-700">Pasif (Gizli)</span>
+                    </label>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Ürün Adı</label>
+                <input required className="w-full border p-2 rounded focus:ring-2 focus:ring-red-500 outline-none" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} />
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Fiyat (₺)</label>
+                    <input required type="number" step="0.01" className="w-full border p-2 rounded focus:ring-2 focus:ring-red-500 outline-none" value={formData.price} onChange={(e) => setFormData({...formData, price: e.target.value})} />
+                </div>
+                <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Kategori</label>
+                    <select className="w-full border p-2 rounded focus:ring-2 focus:ring-red-500 outline-none" value={formData.category} onChange={(e) => setFormData({...formData, category: e.target.value})}>
+                        <option>Kebaplar & Izgaralar</option>
+                        <option>Pide & Lahmacun</option>
+                        <option>Döner</option>
+                        <option>Dürüm</option>
+                        <option>Çorbalar</option>
+                        <option>Tatlılar</option>
+                        <option>İçecekler</option>
+                        <option>Yan Ürünler</option>
+                    </select>
+                </div>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Resim URL</label>
+                <input type="text" placeholder="https://..." className="w-full border p-2 rounded focus:ring-2 focus:ring-red-500 outline-none" value={formData.image} onChange={(e) => setFormData({...formData, image: e.target.value})} />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Açıklama</label>
+                <textarea className="w-full border p-2 rounded h-20 focus:ring-2 focus:ring-red-500 outline-none" value={formData.description} onChange={(e) => setFormData({...formData, description: e.target.value})} />
+              </div>
+
+              <div className="flex gap-3 pt-2">
+                <button type="button" onClick={() => setIsModalOpen(false)} className="flex-1 py-2 border rounded hover:bg-gray-50 font-medium">İptal</button>
+                <button type="submit" className="flex-1 py-2 bg-red-600 text-white rounded hover:bg-red-700 font-bold">Kaydet</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
-  )
+  );
 }
