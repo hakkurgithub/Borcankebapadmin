@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from "react";
-import { useCart } from "../../components/CartProvider"; // Eğer hata verirse yolunu '../components/CartProvider' olarak dene
+import { useCart } from "../../components/CartProvider";
 import Image from "next/image";
 
 interface Product {
@@ -26,12 +26,10 @@ export default function MenuPage() {
     useEffect(() => {
         setIsClient(true);
         
-        // ÖNEMLİ DÜZELTME: { cache: 'no-store' } eklendi.
-        // Bu sayede Next.js eski boş veriyi değil, veritabanındaki yeni veriyi zorla çeker.
+        // Veritabanından güncel veriyi çekiyoruz (Önbellek kapalı)
         fetch('/api/products', { cache: 'no-store' })
             .then(res => res.json())
             .then(data => {
-                console.log("Veritabanından Gelen Veri:", data); // Konsoldan kontrol edebilirsin
                 if (data.success) {
                     setProducts(data.data);
                 }
@@ -68,7 +66,6 @@ export default function MenuPage() {
         });
     };
 
-    // Sayfa yüklenirken veya Client tarafı hazır değilken gösterilecek ekran
     if (!isClient || loading) {
         return (
             <div className="flex items-center justify-center min-h-screen bg-white">
@@ -131,12 +128,13 @@ export default function MenuPage() {
                                 key={item.id}
                                 className="bg-white rounded-xl shadow-md overflow-hidden flex flex-col hover:shadow-xl transition-shadow duration-300 border border-gray-100 group"
                             >
-                                {/* Resim Alanı */}
+                                {/* Resim Alanı - OPTİMİZE EDİLDİ */}
                                 <div className="relative w-full h-56 sm:h-64 bg-gray-200 overflow-hidden">
                                     <Image
                                         src={item.image || '/images/placeholder.jpg'}
                                         alt={item.name}
                                         fill
+                                        // BU SATIR KONSOLDAKİ SARI UYARIYI ÇÖZER:
                                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                                         className="object-cover group-hover:scale-105 transition-transform duration-500"
                                         priority={item.id < 6}

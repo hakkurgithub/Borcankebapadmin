@@ -21,7 +21,7 @@ export default function LoginPage() {
       });
 
       if (res?.ok) {
-        router.push("/manager"); // Başarılıysa panele git
+        router.push("/manager");
         router.refresh();
       } else {
         alert("Hatalı kullanıcı adı veya şifre!");
@@ -47,44 +47,43 @@ export default function LoginPage() {
         </div>
 
         <form className="mt-8 space-y-6" onSubmit={handleLogin}>
-          <div className="rounded-md shadow-sm -space-y-px">
+          <div className="rounded-md shadow-sm space-y-4">
             <div>
-              <label htmlFor="username" className="sr-only">Kullanıcı Adı</label>
+              <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-1">Kullanıcı Adı</label>
               <input
                 id="username"
                 name="username"
                 type="text"
                 required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-red-500 focus:border-red-500 focus:z-10 sm:text-sm"
-                placeholder="Kullanıcı Adı (admin)"
+                className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+                placeholder="admin"
                 value={formData.username}
                 onChange={(e) => setFormData({...formData, username: e.target.value})}
               />
             </div>
             <div>
-              <label htmlFor="password" className="sr-only">Şifre</label>
+              {/* DÜZELTİLDİ: class -> className */}
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">Şifre</label>
               <input
                 id="password"
                 name="password"
                 type="password"
                 required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-red-500 focus:border-red-500 focus:z-10 sm:text-sm"
-                placeholder="Şifre"
+                className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+                placeholder="••••••••"
                 value={formData.password}
                 onChange={(e) => setFormData({...formData, password: e.target.value})}
               />
             </div>
           </div>
 
-          <div>
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors disabled:opacity-70"
-            >
-              {isLoading ? "Giriş Yapılıyor..." : "Giriş Yap"}
-            </button>
-          </div>
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="w-full py-3 px-4 bg-red-600 text-white font-bold rounded-lg hover:bg-red-700 transition disabled:opacity-50"
+          >
+            {isLoading ? "Giriş Yapılıyor..." : "Giriş Yap"}
+          </button>
         </form>
       </div>
     </div>

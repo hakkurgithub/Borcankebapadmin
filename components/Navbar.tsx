@@ -11,7 +11,7 @@ import { useSession } from "next-auth/react";
 export default function Navbar() {
   const { content } = useContent();
   const { getTotalItems } = useCart();
-  const { data: session } = useSession(); // status yüklenmesini beklemiyoruz, sadece session varsa göster
+  const { data: session } = useSession();
   const [itemCount, setItemCount] = useState(0);
   const [animate, setAnimate] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -28,7 +28,6 @@ export default function Navbar() {
   }, [getTotalItems, itemCount]);
 
   const phoneNumber = content.phone.replace(/[^0-9]/g, "");
-  // 2. İSTEK: WhatsApp mesajı güncellendi
   const whatsappMessage = encodeURIComponent("Merhaba, ben Borcan Kebap internet sitesinden size ulaşıyorum, sipariş vermek istiyorum.");
 
   return (
@@ -49,7 +48,6 @@ export default function Navbar() {
             <NavLink href="/about" label="Hakkımızda" active={pathname === "/about"} />
             <NavLink href="/contact" label="İletişim" active={pathname === "/contact"} />
 
-            {/* Masaüstü Sepet Butonu */}
             <Link
               href="/cart"
               className={`relative bg-yellow-400 text-red-900 px-4 py-2 rounded-full font-semibold hover:bg-yellow-300 transition flex items-center gap-2 ${
@@ -65,7 +63,7 @@ export default function Navbar() {
               )}
             </Link>
 
-            {/* 1. İSTEK: Giriş butonu kaldırıldı. Sadece giriş yapılmışsa (Admin) User Menu görünür */}
+            {/* GİRİŞ BUTONU SİLİNDİ. Sadece admin giriş yapmışsa profil menüsü görünür */}
             {session?.user && (
               <div className="relative">
                 <button
@@ -124,14 +122,14 @@ export default function Navbar() {
             <MobileLink href="/about" label="Hakkımızda" setMenuOpen={setMenuOpen} />
             <MobileLink href="/contact" label="İletişim" setMenuOpen={setMenuOpen} />
             
-            {/* Giriş yapılmışsa mobilde de admin linklerini göster */}
+            {/* Mobilde de giriş butonu yok. Sadece giriş yapmışsa admin linkleri görünür */}
             {session?.user && (
                <div className="pt-4 border-t border-red-600 mt-4">
                   <div className="flex items-center gap-3 mb-4 px-2">
                     <div className="bg-red-900 p-2 rounded-full"><User size={20} /></div>
                     <div>
                       <p className="text-sm font-bold">{session.user.name}</p>
-                      <p className="text-xs text-red-200">Yönetici Hesabı</p>
+                      <p className="text-xs text-red-200">Yönetici</p>
                     </div>
                   </div>
                   
@@ -141,7 +139,7 @@ export default function Navbar() {
                       onClick={() => setMenuOpen(false)}
                       className="flex items-center gap-2 bg-white text-red-700 p-3 rounded-lg font-bold mb-3"
                     >
-                      <Settings size={20} /> Yönetim Paneline Git
+                      <Settings size={20} /> Yönetim Paneli
                     </Link>
                   )}
 
@@ -157,9 +155,8 @@ export default function Navbar() {
         )}
       </nav>
 
-      {/* 3. İSTEK: HAREKETLİ (STICKY) BUTONLAR - MOBİL İÇİN */}
+      {/* HAREKETLİ MOBİL BUTONLAR */}
       <div className="fixed bottom-6 right-6 flex flex-col gap-4 z-50 md:hidden pointer-events-none">
-        {/* WhatsApp Butonu (Pointer events auto ile tıklanabilir yapıyoruz) */}
         <a
           href={`https://wa.me/${phoneNumber}?text=${whatsappMessage}`}
           target="_blank"
@@ -169,7 +166,6 @@ export default function Navbar() {
           <MessageCircle size={28} />
         </a>
 
-        {/* Sepet Butonu (Sticky) */}
         <Link
           href="/cart"
           className={`pointer-events-auto bg-yellow-400 text-red-900 p-4 rounded-full shadow-2xl flex items-center justify-center border-2 border-white transition-all hover:scale-110 active:scale-95 ${

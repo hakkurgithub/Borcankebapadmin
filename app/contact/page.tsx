@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
-import AdBanner from "../../components/AdBanner"; // REKLAM BİLEŞENİ EKLENDİ
+import AdBanner from "../../components/AdBanner"; // Reklam bileşeni
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -17,7 +17,6 @@ export default function ContactPage() {
   const [submitMessage, setSubmitMessage] = useState<
     { type: 'success' | 'error'; text: string } | null
   >(null);
-  const [showOrderDropdown, setShowOrderDropdown] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -39,34 +38,6 @@ export default function ContactPage() {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
-
-  const handleOrderClick = () => {
-    setShowOrderDropdown(!showOrderDropdown);
-  };
-
-  const handleChannelClick = (channel: any) => {
-    if (channel.url) {
-      window.open(channel.url, '_blank');
-    }
-    setShowOrderDropdown(false);
-  };
-
-  const orderChannels = [
-    {
-      id: 'whatsapp',
-      name: 'WhatsApp',
-      icon: 'ri-whatsapp-line',
-      color: 'text-green-600',
-      url: 'https://wa.me/905455093462?text=Merhaba! Borcan Kebap\'tan sipariş vermek istiyorum.',
-    },
-    {
-      id: 'phone',
-      name: 'Telefon: 0212 423 3727',
-      icon: 'ri-phone-line',
-      color: 'text-blue-600',
-      url: 'tel:02124233727',
-    },
-  ];
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -145,7 +116,7 @@ export default function ContactPage() {
               </form>
             </div>
 
-            {/* --- REKLAM ALANI (Formun Altına Eklendi) --- */}
+            {/* --- REKLAM ALANI --- */}
             <div className="mt-8">
                 <AdBanner 
                   dataAdSlot="1122334455" 
@@ -153,7 +124,6 @@ export default function ContactPage() {
                   dataFullWidthResponsive={true}
                 />
             </div>
-            {/* -------------------------------------------- */}
           </div>
 
           {/* Sağ Taraf: Bilgiler */}
@@ -205,21 +175,22 @@ export default function ContactPage() {
           </div>
         </div>
 
-        {/* Map Section */}
+        {/* Map Section - DÜZELTİLMİŞ GOOGLE MAPS LINKI */}
         <div className="mt-12 bg-white rounded-xl shadow-lg overflow-hidden">
           <div className="p-8 border-b">
             <h3 className="text-2xl font-bold text-gray-800">Konum</h3>
-            <p className="text-gray-600 mt-2">Bizi haritada bulabilirsiniz</p>
+            <p className="text-gray-600 mt-2">Mustafa Kemal Paşa, İstiklal Cd. No:68, 34320 Avcılar/İstanbul</p>
           </div>
           <div className="h-96 w-full">
             <iframe 
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3011.650490010976!2d28.7236259!3d40.9891594!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14caa1a0d2977905%3A0x334d9037f757633!2sBorcan%20Kebap!5e0!3m2!1str!2str!4v1715000000000!5m2!1str!2str" 
+              src="https://maps.google.com/maps?q=Mustafa%20Kemal%20Pa%C5%9Fa%2C%20%C4%B0stiklal%20Cd.%20No%3A68%2C%20Avc%C4%B1lar%2F%C4%B0stanbul&t=&z=15&ie=UTF8&iwloc=&output=embed"
               width="100%" 
               height="100%" 
               style={{ border: 0 }} 
-              allowFullScreen 
+              allowFullScreen={true} 
               loading="lazy" 
               referrerPolicy="no-referrer-when-downgrade"
+              title="Borcan Kebap Konum"
             ></iframe>
           </div>
         </div>
