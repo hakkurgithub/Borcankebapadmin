@@ -5,7 +5,7 @@ import { products } from './schema';
 import { eq, desc } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 
-// Ürünleri Getir (Manager için)
+// Ürünleri Getir
 export async function getManagerProducts() {
   return await db.select().from(products).orderBy(desc(products.id));
 }
@@ -19,18 +19,18 @@ export async function addProduct(data: any) {
       price: parseFloat(data.price),
       category: data.category,
       image: data.image,
-      isActive: 1
+      isActive: 1 // Varsayılan aktif
     });
-    revalidatePath('/manager/products'); // Sayfayı yenile
+    revalidatePath('/manager/products');
     revalidatePath('/menu');
     return { success: true };
   } catch (error) {
-    console.error("Ürün ekleme hatası:", error);
+    console.error("Ekleme Hatası:", error);
     return { success: false, error: String(error) };
   }
 }
 
-// Ürün Güncelle
+// Ürün Güncelle (Resim, Fiyat, İsim vb.)
 export async function updateProduct(id: number, data: any) {
   try {
     await db.update(products).set({
@@ -46,16 +46,29 @@ export async function updateProduct(id: number, data: any) {
     revalidatePath('/menu');
     return { success: true };
   } catch (error) {
+    console.error("Güncelleme Hatası:", error);
     return { success: false, error: String(error) };
   }
 }
 
-// Ürün Sil (Soft Delete - isActive: 0 yapar)
+// HIZLI DURUM DEĞİŞTİR (Aktif/Pasif Toggle)
+export async function toggleProductStatus(id: number, currentStatus: number) {
+  try {
+    const newStatus = currentStatus === 1 ? 0 : 1; // Tersine çevir
+    await db.update(products).set({ isActive: newStatus }).where(eq(products.id, id));
+    
+    revalidatePath('/manager/products'); // Yönetici listesini yenile
+    revalidatePath('/menu'); // Müşteri menüsünü yenile
+    return { success: true, newStatus };
+  } catch (error) {
+    return { success: false, error: String(error) };
+  }
+}
+
+// Ürün Sil (Tamamen Kaldır)
 export async function deleteProduct(id: number) {
   try {
-    // Veriyi tamamen silmek yerine pasife çekiyoruz
-    await db.update(products).set({ isActive: 0 }).where(eq(products.id, id));
-    
+    await db.delete(products).where(eq(products.id, id));
     revalidatePath('/manager/products');
     revalidatePath('/menu');
     return { success: true };

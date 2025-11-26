@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // 1. Resim İzinleri
   images: {
     remotePatterns: [
       {
@@ -9,6 +10,17 @@ const nextConfig = {
         pathname: "/**",
       },
     ],
+  },
+  
+  // 2. Yönlendirmeler (Redirects)
+  async redirects() {
+    return [
+      {
+        source: '/admin', // Biri /admin yazarsa
+        destination: '/login', // Buraya gitsin
+        permanent: true, // Bu kalıcı bir değişikliktir
+      },
+    ];
   },
 };
 

@@ -10,10 +10,12 @@ import GoogleAdsense from "../components/GoogleAdsense";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Borcan Kebap",
-  description: "Geleneksel Türk Lezzetleri",
+  title: "Borcan Kebap - Geleneksel Türk Lezzetleri",
+  description: "En lezzetli kebap, pide ve lahmacun çeşitleri. Avcılar'da hizmetinizdeyiz.",
+  icons: {
+    icon: '/favicon.ico',
+  },
 };
-
 export default function RootLayout({
   children,
 }: {

@@ -2,11 +2,15 @@ import { NextAuthOptions, getServerSession } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
 export const authOptions: NextAuthOptions = {
-  // Vercel ortam değişkenlerinden gizli anahtarı alır
-  secret: process.env.AUTH_SECRET,
+  // Gizli anahtar (Vercel ayarlarından gelir)
+  secret: process.env.NEXTAUTH_SECRET,
+
+  // 👇 BU AYAR ÇOK ÖNEMLİ: Oturumun veritabanında değil, tarayıcı çerezinde (Token) tutulmasını sağlar.
+  session: {
+    strategy: "jwt",
+  },
   
   providers: [
-    // Sadece Kullanıcı Adı / Şifre Girişi
     CredentialsProvider({
       name: "Yönetici Girişi",
       credentials: {
@@ -14,13 +18,13 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Şifre", type: "password" },
       },
       async authorize(credentials) {
-        // Kullanıcı adı ve şifre kontrolü
-        // Şifreyi .env dosyasından (ADMIN_PASSWORD) veya sabit olarak "Borcan2025"ten alır
-        const validPassword = process.env.ADMIN_PASSWORD || "Borcan2025";
+        const adminUser = "admin"; 
+        // Şifre .env dosyasından gelir, yoksa yedek şifre kullanılır
+        const adminPass = process.env.ADMIN_PASSWORD || "Borcan2025";
 
         if (
-          (credentials?.username === "admin" || credentials?.username === "manager") && 
-          credentials?.password === validPassword
+          (credentials?.username === adminUser || credentials?.username === "manager") && 
+          credentials?.password === adminPass
         ) {
           return {
             id: "1",
@@ -30,15 +34,16 @@ export const authOptions: NextAuthOptions = {
           };
         }
         
-        // Hatalı giriş
         return null;
       },
     }),
   ],
+  
   pages: {
-    signIn: "/login", // Özel giriş sayfamız
-    error: "/auth/error", // Hata sayfası
+    signIn: "/login",
+    error: "/auth/error",
   },
+  
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
@@ -55,5 +60,4 @@ export const authOptions: NextAuthOptions = {
   },
 };
 
-// Server-side kullanım için helper
 export const auth = () => getServerSession(authOptions);

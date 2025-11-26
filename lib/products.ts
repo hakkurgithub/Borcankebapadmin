@@ -1,10 +1,23 @@
 import { db } from './db';
 import { products, orders, users } from './schema';
-import { eq, desc, and } from 'drizzle-orm';
+import { eq, desc, sql } from 'drizzle-orm'; // 'sql' eklendi
 
-// 1. Tüm Ürünleri Çek
+// 1. Tüm Ürünleri Çek (ÖZEL KATEGORİ SIRALAMASI İLE)
 export const getAllProducts = async () => {
-  return await db.select().from(products).orderBy(desc(products.id));
+  return await db.select().from(products).orderBy(
+    // SQL CASE yapısı ile özel sıralama mantığı
+    sql`CASE 
+      WHEN ${products.category} = 'Kebaplar & Izgaralar' THEN 1
+      WHEN ${products.category} = 'Pide & Lahmacun' THEN 2
+      WHEN ${products.category} = 'Döner' THEN 3
+      WHEN ${products.category} = 'Dürüm' THEN 4
+      WHEN ${products.category} = 'Çorbalar' THEN 5
+      WHEN ${products.category} = 'Yan Ürünler' THEN 6
+      WHEN ${products.category} = 'Tatlılar' THEN 7
+      WHEN ${products.category} = 'İçecekler' THEN 8
+      ELSE 9 -- Tanımsız kategoriler en sona
+    END`
+  );
 };
 
 // 2. Kategoriye Göre Ürünleri Çek
@@ -36,12 +49,12 @@ export const getUserOrders = async (userEmail: string) => {
     return await db.select().from(orders).where(eq(orders.userId, user[0].id)).orderBy(desc(orders.createdAt));
 };
 
-// 5. Kullanıcı ID'sine Göre Sipariş Çek (EKSİK OLAN BUYDU)
+// 5. Kullanıcı ID'sine Göre Sipariş Çek
 export const getOrdersByUser = async (userId: number) => {
   return await db.select().from(orders).where(eq(orders.userId, userId)).orderBy(desc(orders.createdAt));
 };
 
-// 6. Rezervasyon (Hata vermemesi için boş fonksiyon)
+// 6. Rezervasyon (Boş fonksiyon - hata vermemesi için)
 export const getAllReservations = async () => {
     return []; 
 };
