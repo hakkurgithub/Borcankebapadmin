@@ -4,9 +4,8 @@ import { Inter } from "next/font/google";
 import AuthProvider from "../components/AuthProvider";
 import { CartProvider } from "../components/CartProvider";
 import Navbar from "../components/Navbar";
-import GoogleAdsense from "../components/GoogleAdsense";
+import Script from "next/script";
 
-// Font ayarı
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -15,11 +14,9 @@ export const metadata: Metadata = {
   icons: {
     icon: '/favicon.ico',
   },
-  // 👇 BURAYI DÜZELTTİM:
-  // Buraya script etiketi DEĞİL, sadece Google'ın verdiği kısa kod (ID) gelir.
-  // Eğer elinde "google-site-verification" kodu yoksa bu kısmı boş bırakabilirsin.
-  verification: {
-    google: "google-site-verification=KODU_BURAYA_YAZIN_YOKSA_BOS_BIRAKIN", 
+  // 👇 GOOGLE ADSENSE DOĞRULAMASI BURADA YAPILIYOR
+  other: {
+    "google-adsense-account": "ca-pub-1758003652328292",
   },
 };
 
@@ -30,11 +27,16 @@ export default function RootLayout({
 }) {
   return (
     <html lang="tr">
+      <head>
+        {/* Google AdSense Scripti (Yedek Olarak Kalsın, Reklam Gösterimi İçin Lazım) */}
+        <Script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1758003652328292"
+          crossOrigin="anonymous"
+          strategy="afterInteractive"
+        />
+      </head>
       <body className={inter.className}>
-        {/* Google Reklam Scripti (Zaten burada var, yukarıya yazmana gerek yok) */}
-        <GoogleAdsense />
-        
-        {/* Oturum ve Sepet Yönetimi */}
         <AuthProvider>
           <CartProvider>
             <Navbar />
