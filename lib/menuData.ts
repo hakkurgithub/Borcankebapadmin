@@ -275,25 +275,8 @@ export const MENU_ITEMS: MenuItem[] = [
     image: "https://raw.githubusercontent.com/hakkurgithub/images/main/ekmek-arasi-doner.jpg",
     rating: 5,
   },
-  {
-    id: "d-04",
-    name: "Tavuk Döner (Porsiyon)",
-    price: 400,
-    description: "Tavuk döner; pilav ve garnitürle.",
-    category: "Döner",
-  image: "https://raw.githubusercontent.com/hakkurgithub/images/main/tavuk-doner.jpg",
-    rating: 5,
-  },
-  {
-    id: "d-05",
-    name: "Çifte Döner",
-    price: 550,
-    description: "Et ve tavuk döner karışımı.",
-    category: "Döner",
-    image: "https://raw.githubusercontent.com/hakkurgithub/images/main/cifte-doner.png",
-    rating: 5,
-  },
-  {
+ 
+   {
     id: "p-01",
     name: "Lahmacun",
     price: 130,
@@ -359,7 +342,7 @@ export const MENU_ITEMS: MenuItem[] = [
   {
     id: "p-08",
     name: "Kıyma Kaşarlı Pide",
-    price: 450,
+    price: 350,
     description: "Kıyma ve kaşar, zengin içerik.",
     category: "Pide & Lahmacun",
     image: "https://raw.githubusercontent.com/hakkurgithub/images/main/kiyma-kasarli-pide.jpg",
@@ -368,7 +351,7 @@ export const MENU_ITEMS: MenuItem[] = [
   {
     id: "p-09",
     name: "Kavurmalı Pide",
-    price: 450,
+    price: 400,
     description: "Bol kavurmalı, doyurucu pide.",
     category: "Pide & Lahmacun",
     image: "https://raw.githubusercontent.com/hakkurgithub/images/main/kavurmali-pide.jpg",
@@ -377,7 +360,7 @@ export const MENU_ITEMS: MenuItem[] = [
   {
     id: "p-10",
     name: "Kavurma Kaşarlı Pide",
-    price: 470,
+    price: 400,
     description: "Kavurma ve kaşarın eşsiz birlikteliği.",
     category: "Pide & Lahmacun",
     image: "https://raw.githubusercontent.com/hakkurgithub/images/main/kavurma-kasarli-pide.jpg",
@@ -386,7 +369,7 @@ export const MENU_ITEMS: MenuItem[] = [
   {
     id: "p-11",
     name: "Kuşbaşılı Pide",
-    price: 450,
+    price: 350,
     description: "Kuşbaşı et ile hazırlanan pide.",
     category: "Pide & Lahmacun",
     image: "https://raw.githubusercontent.com/hakkurgithub/images/main/kusbasili-pide.jpg",
@@ -396,7 +379,7 @@ export const MENU_ITEMS: MenuItem[] = [
   {
     id: "p-13",
     name: "Kuşbaşı Kaşarlı Pide",
-    price: 470,
+    price: 400,
     description: "Kuşbaşı et + kaşar.",
     category: "Pide & Lahmacun",
     image: "https://raw.githubusercontent.com/hakkurgithub/images/main/kusbasi-kasarli-pide.jpg",
@@ -406,7 +389,7 @@ export const MENU_ITEMS: MenuItem[] = [
   {
     id: "c-01",
     name: "Mercimek Çorbası",
-    price: 40,
+    price: 100,
     description: "Geleneksel kırmızı mercimek çorbası.",
     category: "Çorbalar",
     image: "https://raw.githubusercontent.com/hakkurgithub/images/main/mercimek-corbasi.jpg",
@@ -442,7 +425,7 @@ export const MENU_ITEMS: MenuItem[] = [
   {
     id: "t-01",
     name: "Künefe",
-    price: 90,
+    price: 100,
     description: "Peynirli tel kadayıf tatlısı; sıcak servis.",
     category: "Tatlılar",
     image: "https://raw.githubusercontent.com/hakkurgithub/images/main/kunefe.jpeg",
@@ -451,7 +434,7 @@ export const MENU_ITEMS: MenuItem[] = [
   {
     id: "t-02",
     name: "Fırın Sütlaç",
-    price: 60,
+    price: 100,
     description: "Klasik fırın sütlaç; tarçınla.",
     category: "Tatlılar",
     image: "https://raw.githubusercontent.com/hakkurgithub/images/main/firin-sutlac.jpeg",
@@ -460,7 +443,7 @@ export const MENU_ITEMS: MenuItem[] = [
   {
     id: "i-01",
     name: "Açık Ayran",
-    price: 25,
+    price: 80,
     description: "Ferahlatan ev yapımı ayran.",
     category: "İçecekler",
     image: "https://raw.githubusercontent.com/hakkurgithub/images/main/acik-ayran.jpg",
@@ -478,7 +461,7 @@ export const MENU_ITEMS: MenuItem[] = [
   {
     id: "i-02",
     name: "Sade Soda",
-    price: 20,
+    price: 60,
     description: "Doğal maden suyu.",
     category: "İçecekler",
     image: "https://raw.githubusercontent.com/hakkurgithub/images/main/sade-soda.jpeg",
@@ -487,7 +470,7 @@ export const MENU_ITEMS: MenuItem[] = [
   {
     id: "i-03",
     name: "Şalgam",
-    price: 25,
+    price: 80,
     description: "Adana usulü; acılı/acıssız seçenek.",
     category: "İçecekler",
     image: "https://raw.githubusercontent.com/hakkurgithub/images/main/salgam.jpg",
@@ -496,7 +479,7 @@ export const MENU_ITEMS: MenuItem[] = [
   {
     id: "i-03a",
     name: "Kola",
-    price: 20,
+    price: 80,
     description: "Sade kola servisi.",
     category: "İçecekler",
     image: "https://raw.githubusercontent.com/hakkurgithub/images/main/cola-fanta-sprite.jpeg",
@@ -505,7 +488,7 @@ export const MENU_ITEMS: MenuItem[] = [
   {
     id: "i-04",
     name: "Su",
-    price: 10,
+    price: 20,
     description: "Soğuk içme suyu.",
     category: "İçecekler",
     image: "https://raw.githubusercontent.com/hakkurgithub/images/main/su.jpg",
@@ -514,7 +497,7 @@ export const MENU_ITEMS: MenuItem[] = [
   {
     id: "i-05",
     name: "Meyveli Soda",
-    price: 25,
+    price: 60,
     description: "Çeşitli aromalarda ferahlatıcı soda.",
     category: "İçecekler",
     image: "https://raw.githubusercontent.com/hakkurgithub/images/main/meyvelisoda.jpeg",
@@ -523,7 +506,7 @@ export const MENU_ITEMS: MenuItem[] = [
   {
     id: "i-06",
     name: "Meyve Suyu",
-    price: 25,
+    price: 80,
     description: "Soğuk, taze meyve suları.",
     category: "İçecekler",
     image: "https://raw.githubusercontent.com/hakkurgithub/images/main/meyve-suyu.jpeg",
@@ -532,7 +515,7 @@ export const MENU_ITEMS: MenuItem[] = [
   {
     id: "i-07",
     name: "Kola / Fanta / Sprite",
-    price: 25,
+    price: 80,
     description: "Popüler gazlı içecekler.",
     category: "İçecekler",
     image: "https://raw.githubusercontent.com/hakkurgithub/images/main/cola-fanta-sprite.jpeg",
