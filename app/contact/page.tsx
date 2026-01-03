@@ -45,7 +45,6 @@ export default function ContactPage() {
         text: 'WhatsApp yönlendirmesi başlatıldı! Lütfen açılan pencereden mesajı gönderin.',
       });
       setIsSubmitting(false);
-      // Formu temizlemiyoruz ki kullanıcı gerekirse geri dönüp bakabilsin
     }, 1000);
   };
 
@@ -154,7 +153,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h4 className="font-semibold text-gray-800 mb-1">Adres</h4>
-                    <p className="text-gray-600">Mustafa Kemal Paşa Mahallesi, İstiklal Cd. No:68, 34320 Avcılar/İstanbul</p>
+                    <p className="text-gray-600">Mustafa Kemal Paşa, Mahallesi, İstiklal Cd. No:68, 34320 Avcılar/İstanbul</p>
                   </div>
                 </div>
                 <div className="flex items-start">
@@ -167,51 +166,3 @@ export default function ContactPage() {
                   </div>
                 </div>
                 <div className="flex items-start">
-                  <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mr-4">
-                    <i className="ri-whatsapp-line text-xl text-red-600"></i>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-gray-800 mb-1">WhatsApp</h4>
-                    <p className="text-gray-600">0545 509 34 62</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-xl shadow-lg p-8">
-              <h3 className="text-2xl font-bold text-gray-800 mb-6">Sosyal Medya</h3>
-              <div className="grid grid-cols-2 gap-4">
-                <button onClick={() => window.open('https://www.facebook.com/profile.php?id=61579514506784&locale=tr_TR', '_blank')} className="flex items-center justify-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
-                  <i className="ri-facebook-fill text-2xl text-blue-600 mr-3"></i> Facebook
-                </button>
-                <button onClick={() => window.open('https://www.instagram.com/borcan_kebap_pide_lahmacun?utm_source=qr&igsh=d2twdW0yZ2FqaGJl', '_blank')} className="flex items-center justify-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
-                  <i className="ri-instagram-fill text-2xl text-pink-600 mr-3"></i> Instagram
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Map Section */}
-        <div className="mt-12 bg-white rounded-xl shadow-lg overflow-hidden">
-          <div className="p-8 border-b">
-            <h3 className="text-2xl font-bold text-gray-800">Konum</h3>
-            <p className="text-gray-600 mt-2">Mustafa Kemal Paşa, İstiklal Cd. No:68, 34320 Avcılar/İstanbul</p>
-          </div>
-          <div className="h-96 w-full">
-            <iframe 
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3012.247192306233!2d28.7118247!3d40.9760779!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14caa164223f6693%3A0xc49d9c849176395b!2sBorcan%20Kebap!5e0!3m2!1str!2str!4v1710000000000!5m2!1str!2str"
-              width="100%" 
-              height="100%" 
-              style={{ border: 0 }} 
-              allowFullScreen={true} 
-              loading="lazy" 
-              referrerPolicy="no-referrer-when-downgrade"
-              title="Borcan Kebap Konum"
-            ></iframe>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
