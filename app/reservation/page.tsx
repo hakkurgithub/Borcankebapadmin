@@ -2,39 +2,59 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
-import AdBanner from "../../components/AdBanner"; // Reklam bileşeni
+import AdBanner from "../../components/AdBanner";
 
-export default function ContactPage() {
+export default function ReservationPage() {
   const [formData, setFormData] = useState({
     name: '',
-    email: '',
     phone: '',
-    subject: '',
-    message: '',
+    date: '',
+    time: '',
+    guests: '2',
+    note: ''
   });
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitMessage, setSubmitMessage] = useState<
-    { type: 'success' | 'error'; text: string } | null
-  >(null);
-
-  // WHATSAPP YÖNLENDİRME FONKSİYONU
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleWhatsAppReservation = (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
-
-    // Mesaj içeriğini hazırlıyoruz
+    
+    // Mesaj Formatı
     const mesaj = `Merhaba Borcan Kebap,%0A%0A` +
-                  `*Yeni İletişim Formu Mesajı*%0A` +
+                  `*Yeni Rezervasyon Talebi*%0A` +
                   `--------------------------%0A` +
                   `*İsim:* ${formData.name}%0A` +
-                  `*E-posta:* ${formData.email}%0A` +
-                  `*Telefon:* ${formData.phone || 'Belirtilmedi'}%0A` +
-                  `*Konu:* ${formData.subject}%0A` +
-                  `*Mesaj:* ${formData.message}%0A%0A` +
-                  `Yanıtınızı bekliyorum.`;
+                  `*Telefon:* ${formData.phone}%0A` +
+                  `*Tarih:* ${formData.date}%0A` +
+                  `*Saat:* ${formData.time}%0A` +
+                  `*Kişi Sayısı:* ${formData.guests}%0A` +
+                  `*Not:* ${formData.note || 'Yok'}%0A%0A` +
+                  `Onay bekliyorum.`;
 
-    // Sizin numaranız
+    window.open(`https://wa.me/905455093462?text=${mesaj}`, '_blank');
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50 pt-20">
+      <div className="max-w-2xl mx-auto p-6 bg-white shadow-xl rounded-2xl border border-gray-100">
+        <h1 className="text-3xl font-bold text-center mb-8 text-red-600">Rezervasyon Yap</h1>
+        <form onSubmit={handleWhatsAppReservation} className="space-y-4">
+          <input type="text" placeholder="Ad Soyad" required className="w-full p-3 border rounded-lg" onChange={(e)=>setFormData({...formData, name: e.target.value})} />
+          <input type="tel" placeholder="Telefon" required className="w-full p-3 border rounded-lg" onChange={(e)=>setFormData({...formData, phone: e.target.value})} />
+          <div className="grid grid-cols-2 gap-4">
+            <input type="date" required className="p-3 border rounded-lg" onChange={(e)=>setFormData({...formData, date: e.target.value})} />
+            <input type="time" required className="p-3 border rounded-lg" onChange={(e)=>setFormData({...formData, time: e.target.value})} />
+          </div>
+          <select className="w-full p-3 border rounded-lg" onChange={(e)=>setFormData({...formData, guests: e.target.value})}>
+            {[1,2,3,4,5,6,8,10].map(n => <option key={n} value={n}>{n} Kişi</option>)}
+          </select>
+          <textarea placeholder="Özel istekleriniz..." className="w-full p-3 border rounded-lg h-24" onChange={(e)=>setFormData({...formData, note: e.target.value})}></textarea>
+          <button type="submit" className="w-full bg-red-600 text-white py-4 rounded-lg font-bold hover:bg-red-700 transition-all">
+            Rezervasyonu WhatsApp ile Tamamla
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+}    // Sizin numaranız
     const whatsappUrl = `https://wa.me/905455093462?text=${mesaj}`;
 
     // Kısa bir gecikme simülasyonu (Kullanıcıya gönderiliyor hissi vermek için)
