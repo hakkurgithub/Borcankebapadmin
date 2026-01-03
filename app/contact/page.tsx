@@ -54,7 +54,6 @@ export default function ContactPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
           
-          {/* Form Alanı */}
           <div className="lg:col-span-2">
             <div className="bg-white rounded-xl shadow-lg p-8">
               <h2 className="text-3xl font-bold text-gray-800 mb-6">Mesaj Gönderin</h2>
@@ -83,7 +82,6 @@ export default function ContactPage() {
             </div>
           </div>
 
-          {/* Yan Panel */}
           <div className="space-y-8">
             <div className="bg-white rounded-xl shadow-lg p-8 border border-gray-100">
               <h3 className="text-2xl font-bold text-gray-800 mb-6 border-b pb-2">İletişim Bilgileri</h3>
@@ -102,10 +100,10 @@ export default function ContactPage() {
           </div>
         </div>
 
-        {/* NOKTA ATIŞI HARİTA (Eski Dosyanızdan Alındı) */}
+        {/* BURASI DÜZELTİLDİ: Orijinal dosyanızdaki nokta atışı Google Haritalar linki */}
         <div className="mt-12 bg-white rounded-xl shadow-lg overflow-hidden border-4 border-white">
           <iframe 
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3011.644145958252!2d28.7126130758744!3d40.9892955713532!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14caa16962000001%3A0x6b0460c38481498c!2sBorcan%20Kebap!5e0!3m2!1str!2str!4v1700000000000!5m2!1str!2str" 
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3011.517304193301!2d28.711812876555197!3d40.99205562041285!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14caa110034a71d7%3A0xe98822538f71058a!2sBorcan%20Kebap!5e0!3m2!1str!2str!4v1716301389803!5m2!1str!2str" 
             width="100%" 
             height="500" 
             style={{ border: 0 }} 
