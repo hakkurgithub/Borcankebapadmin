@@ -13,7 +13,7 @@ interface Product {
     formattedPrice?: string;
     category: string | null;
     image: string | null;
-    isActive: number;
+    isActive: number; // 1: Aktif, 0: Pasif (Gizli)
 }
 
 export default function MenuPage() {
@@ -53,9 +53,15 @@ export default function MenuPage() {
         "İçecekler"
     ];
 
-    const filteredItems = products.filter((item) =>
-        activeCategory === "all" ? true : item.category === activeCategory
-    );
+    // DÜZELTME BURADA YAPILDI:
+    // Hem kategoriye bakıyor HEM DE ürün aktif mi (gizli değil mi) diye kontrol ediyor.
+    const filteredItems = products.filter((item) => {
+        // 1. Kural: Eğer ürün gizliyse (isActive 0 ise veya false ise) gösterme
+        if (!item.isActive || item.isActive === 0) return false;
+
+        // 2. Kural: Kategori filtresi
+        return activeCategory === "all" ? true : item.category === activeCategory;
+    });
 
     const handleAddToCart = (item: Product) => {
         const price = item.priceInLira || parseFloat(String(item.price));
@@ -128,13 +134,12 @@ export default function MenuPage() {
                                 key={item.id}
                                 className="bg-white rounded-xl shadow-md overflow-hidden flex flex-col hover:shadow-xl transition-shadow duration-300 border border-gray-100 group"
                             >
-                                {/* Resim Alanı - OPTİMİZE EDİLDİ */}
+                                {/* Resim Alanı */}
                                 <div className="relative w-full h-56 sm:h-64 bg-gray-200 overflow-hidden">
                                     <Image
                                         src={item.image || '/images/placeholder.jpg'}
                                         alt={item.name}
                                         fill
-                                        // BU SATIR KONSOLDAKİ SARI UYARIYI ÇÖZER:
                                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                                         className="object-cover group-hover:scale-105 transition-transform duration-500"
                                         priority={item.id < 6}

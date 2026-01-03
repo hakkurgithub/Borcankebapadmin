@@ -40,7 +40,10 @@ export default function Home() {
     return null;
   }
 
-  const popularItems = (content.allMenuItems || []).slice(0, 4);
+ // EĞER ürünün 'is_active' değeri false (kapalı) ise listeye alma
+  const popularItems = (content.allMenuItems || [])
+    .filter((item: any) => item.is_active !== false) 
+    .slice(0, 4);
 
   const aboutText = content.aboutText || "Borcan Kebap, 1985 yılından beri geleneksel Türk mutfağının eşsiz lezzetlerini sunmaktadır. Aileden gelen 40 yıllık deneyimimizle, her yemeğimizde kaliteyi ve tazeliği hissedersiniz.";
 

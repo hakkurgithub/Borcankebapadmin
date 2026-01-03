@@ -63,7 +63,6 @@ export default function Navbar() {
               )}
             </Link>
 
-            {/* GİRİŞ BUTONU SİLİNDİ. Sadece admin giriş yapmışsa profil menüsü görünür */}
             {session?.user && (
               <div className="relative">
                 <button
@@ -122,7 +121,6 @@ export default function Navbar() {
             <MobileLink href="/about" label="Hakkımızda" setMenuOpen={setMenuOpen} />
             <MobileLink href="/contact" label="İletişim" setMenuOpen={setMenuOpen} />
             
-            {/* Mobilde de giriş butonu yok. Sadece giriş yapmışsa admin linkleri görünür */}
             {session?.user && (
                <div className="pt-4 border-t border-red-600 mt-4">
                   <div className="flex items-center gap-3 mb-4 px-2">
@@ -155,37 +153,40 @@ export default function Navbar() {
         )}
       </nav>
 
-      {/* HAREKETLİ MOBİL BUTONLAR */}
-      <div className="fixed bottom-6 right-6 flex flex-col gap-4 z-50 md:hidden pointer-events-none">
-        <a
-          href={`https://wa.me/${phoneNumber}?text=${whatsappMessage}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="pointer-events-auto bg-green-500 text-white p-4 rounded-full shadow-2xl flex items-center justify-center border-2 border-white hover:bg-green-600 transition-transform hover:scale-110 active:scale-95"
-        >
-          <MessageCircle size={28} />
-        </a>
+      {/* HAREKETLİ MOBİL BUTONLAR - Google Politikası gereği menü açıkken gizlendi */}
+      {!menuOpen && (
+        <div className="fixed bottom-6 right-6 flex flex-col gap-4 z-50 md:hidden pointer-events-none">
+          <a
+            href={`https://wa.me/${phoneNumber}?text=${whatsappMessage}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="pointer-events-auto bg-green-500 text-white p-4 rounded-full shadow-2xl flex items-center justify-center border-2 border-white hover:bg-green-600 transition-transform hover:scale-110 active:scale-95"
+          >
+            <MessageCircle size={28} />
+          </a>
 
-        <Link
-          href="/cart"
-          className={`pointer-events-auto bg-yellow-400 text-red-900 p-4 rounded-full shadow-2xl flex items-center justify-center border-2 border-white transition-all hover:scale-110 active:scale-95 ${
-             animate ? "scale-125 bg-yellow-300" : ""
-          }`}
-        >
-          <div className="relative">
-            <ShoppingCart size={28} />
-            {itemCount > 0 && (
-              <span className="absolute -top-3 -right-3 bg-red-600 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center border-2 border-yellow-400 shadow-sm">
-                {itemCount}
-              </span>
-            )}
-          </div>
-        </Link>
-      </div>
+          <Link
+            href="/cart"
+            className={`pointer-events-auto bg-yellow-400 text-red-900 p-4 rounded-full shadow-2xl flex items-center justify-center border-2 border-white transition-all hover:scale-110 active:scale-95 ${
+               animate ? "scale-125 bg-yellow-300" : ""
+            }`}
+          >
+            <div className="relative">
+              <ShoppingCart size={28} />
+              {itemCount > 0 && (
+                <span className="absolute -top-3 -right-3 bg-red-600 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center border-2 border-yellow-400 shadow-sm">
+                  {itemCount}
+                </span>
+              )}
+            </div>
+          </Link>
+        </div>
+      )}
     </>
   );
 }
 
+// Yardımcı Bileşenler Değişmedi
 function NavLink({ href, label, active }: { href: string; label: string; active: boolean }) {
   return (
     <Link
@@ -199,15 +200,7 @@ function NavLink({ href, label, active }: { href: string; label: string; active:
   );
 }
 
-function MobileLink({
-  href,
-  label,
-  setMenuOpen,
-}: {
-  href: string;
-  label: string;
-  setMenuOpen: (open: boolean) => void;
-}) {
+function MobileLink({ href, label, setMenuOpen }: { href: string; label: string; setMenuOpen: (open: boolean) => void }) {
   return (
     <Link
       href={href}
