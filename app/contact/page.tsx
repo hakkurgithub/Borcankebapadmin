@@ -18,18 +18,35 @@ export default function ContactPage() {
     { type: 'success' | 'error'; text: string } | null
   >(null);
 
+  // WHATSAPP YÖNLENDİRME FONKSİYONU
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
+    // Mesaj içeriğini hazırlıyoruz
+    const mesaj = `Merhaba Borcan Kebap,%0A%0A` +
+                  `*Yeni İletişim Formu Mesajı*%0A` +
+                  `--------------------------%0A` +
+                  `*İsim:* ${formData.name}%0A` +
+                  `*E-posta:* ${formData.email}%0A` +
+                  `*Telefon:* ${formData.phone || 'Belirtilmedi'}%0A` +
+                  `*Konu:* ${formData.subject}%0A` +
+                  `*Mesaj:* ${formData.message}%0A%0A` +
+                  `Yanıtınızı bekliyorum.`;
+
+    // Sizin numaranız
+    const whatsappUrl = `https://wa.me/905455093462?text=${mesaj}`;
+
+    // Kullanıcıya bilgi verip WhatsApp'ı açıyoruz
     setTimeout(() => {
+      window.open(whatsappUrl, '_blank');
       setSubmitMessage({
         type: 'success',
-        text: 'Mesajınız başarıyla gönderildi! En kısa sürede size dönüş yapacağız.',
+        text: 'WhatsApp yönlendirmesi başlatıldı! Lütfen açılan pencereden mesajı gönderin.',
       });
       setIsSubmitting(false);
-      setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
-    }, 2000);
+      // Formu temizlemiyoruz ki kullanıcı gerekirse geri dönüp bakabilsin
+    }, 1000);
   };
 
   const handleInputChange = (
@@ -95,11 +112,11 @@ export default function ContactPage() {
                     <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-2">Konu *</label>
                     <select id="subject" name="subject" required value={formData.subject} onChange={handleInputChange} className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
                       <option value="">Konu seçiniz</option>
-                      <option value="reservation">Rezervasyon</option>
-                      <option value="complaint">Şikayet</option>
-                      <option value="suggestion">Öneri</option>
+                      <option value="rezervasyon">Rezervasyon</option>
+                      <option value="sikayet">Şikayet</option>
+                      <option value="oneri">Öneri</option>
                       <option value="catering">Catering Hizmetleri</option>
-                      <option value="other">Diğer</option>
+                      <option value="diger">Diğer</option>
                     </select>
                   </div>
                 </div>
@@ -111,7 +128,7 @@ export default function ContactPage() {
                 </div>
 
                 <button type="submit" disabled={isSubmitting || formData.message.length > 500} className="w-full bg-red-600 text-white py-4 rounded-lg font-semibold hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
-                  {isSubmitting ? 'Gönderiliyor...' : 'Mesajı Gönder'}
+                  {isSubmitting ? 'WhatsApp Uygulamasına Gidiliyor...' : 'Mesajı WhatsApp ile Gönder'}
                 </button>
               </form>
             </div>
@@ -137,7 +154,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h4 className="font-semibold text-gray-800 mb-1">Adres</h4>
-                    <p className="text-gray-600">Mustafa Kemal Paşa, Mahallesi, İstiklal Cd. No:68, 34320 Avcılar/İstanbul</p>
+                    <p className="text-gray-600">Mustafa Kemal Paşa Mahallesi, İstiklal Cd. No:68, 34320 Avcılar/İstanbul</p>
                   </div>
                 </div>
                 <div className="flex items-start">
@@ -151,11 +168,11 @@ export default function ContactPage() {
                 </div>
                 <div className="flex items-start">
                   <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mr-4">
-                    <i className="ri-mail-line text-xl text-red-600"></i>
+                    <i className="ri-whatsapp-line text-xl text-red-600"></i>
                   </div>
                   <div>
-                    <h4 className="font-semibold text-gray-800 mb-1">E-posta</h4>
-                    <p className="text-gray-600">info@borcankebap.com</p>
+                    <h4 className="font-semibold text-gray-800 mb-1">WhatsApp</h4>
+                    <p className="text-gray-600">0545 509 34 62</p>
                   </div>
                 </div>
               </div>
@@ -175,7 +192,7 @@ export default function ContactPage() {
           </div>
         </div>
 
-        {/* Map Section - DÜZELTİLMİŞ GOOGLE MAPS LINKI */}
+        {/* Map Section */}
         <div className="mt-12 bg-white rounded-xl shadow-lg overflow-hidden">
           <div className="p-8 border-b">
             <h3 className="text-2xl font-bold text-gray-800">Konum</h3>
@@ -183,7 +200,7 @@ export default function ContactPage() {
           </div>
           <div className="h-96 w-full">
             <iframe 
-              src="https://maps.google.com/maps?q=Mustafa%20Kemal%20Pa%C5%9Fa%2C%20%C4%B0stiklal%20Cd.%20No%3A68%2C%20Avc%C4%B1lar%2F%C4%B0stanbul&t=&z=15&ie=UTF8&iwloc=&output=embed"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3012.247192306233!2d28.7118247!3d40.9760779!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14caa164223f6693%3A0xc49d9c849176395b!2sBorcan%20Kebap!5e0!3m2!1str!2str!4v1710000000000!5m2!1str!2str"
               width="100%" 
               height="100%" 
               style={{ border: 0 }} 
