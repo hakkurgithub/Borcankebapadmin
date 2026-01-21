@@ -3,21 +3,18 @@ import { useEffect, useState } from 'react';
 import MenuButton from './MenuButton';
 
 export default function MenuPage() {
-  const [products, setProducts] = useState<any[]>([]);
+  const [products, setProducts] = useState([]);
   const [error, setError] = useState(false);
 
   useEffect(() => {
     fetch('/api/menu')
       .then(res => res.json())
-      .then(data => {
-        if (data.error) setError(true);
-        else setProducts(data);
-      })
+      .then(data => data.error ? setError(true) : setProducts(data))
       .catch(() => setError(true));
   }, []);
 
-  if (error) return <div className="pt-32 text-center text-red-600 font-bold">Veritabanı hatası! Lütfen sayfayı yenileyin.</div>;
-  if (!products.length) return <div className="pt-32 text-center font-bold">Menü hazırlanıyor...</div>;
+  if (error) return <div className="pt-32 text-center text-red-600 font-bold">Bağlantı tazeleyiniz...</div>;
+  if (!products.length) return <div className="pt-32 text-center font-bold">Lezzetler hazırlanıyor...</div>;
 
   const categories = [...new Set(products.map(p => p.category))];
 
