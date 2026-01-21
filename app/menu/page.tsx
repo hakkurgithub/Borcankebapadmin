@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import { prisma } from '../../lib/prisma'; // '@' yerine doğrudan yol kullanıldı
 import Image from 'next/image';
 import MenuButton from './MenuButton'; // Dosyanın bu klasörde olduğu teyit edilmeli
