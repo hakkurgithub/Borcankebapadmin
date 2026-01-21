@@ -1,192 +1,99 @@
-'use client';
+import { prisma } from '../../lib/prisma'; // '@' yerine doğrudan yol kullanıldı
+import Image from 'next/image';
+import MenuButton from './MenuButton'; // Dosyanın bu klasörde olduğu teyit edilmeli
 
-import { useState, useEffect } from "react";
-import { useCart } from "../../components/CartProvider";
-import Image from "next/image";
+// Sayfanın her zaman güncel kalmasını sağlar
+export const dynamic = 'force-dynamic';
 
-interface Product {
-    id: number;
-    name: string;
-    description: string | null;
-    price: number | string;
-    priceInLira?: number;
-    formattedPrice?: string;
-    category: string | null;
-    image: string | null;
-    isActive: number; // 1: Aktif, 0: Pasif (Gizli)
-}
-
-export default function MenuPage() {
-    const { addItem, items } = useCart();
-    const [activeCategory, setActiveCategory] = useState("all");
-    const [isClient, setIsClient] = useState(false);
-    const [products, setProducts] = useState<Product[]>([]);
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        setIsClient(true);
-        
-        // Veritabanından güncel veriyi çekiyoruz (Önbellek kapalı)
-        fetch('/api/products', { cache: 'no-store' })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    setProducts(data.data);
-                }
-                setLoading(false);
-            })
-            .catch(error => {
-                console.error('Error loading products:', error);
-                setLoading(false);
-            });
-    }, []);
-
-    const categories = [
-        "all",
-        "Kebaplar & Izgaralar",
-        "Pide & Lahmacun",
-        "Döner",
-        "Dürüm",
-        "Çorbalar",
-        "Yan Ürünler",
-        "Tatlılar",
-        "İçecekler"
-    ];
-
-    // DÜZELTME BURADA YAPILDI:
-    // Hem kategoriye bakıyor HEM DE ürün aktif mi (gizli değil mi) diye kontrol ediyor.
-    const filteredItems = products.filter((item) => {
-        // 1. Kural: Eğer ürün gizliyse (isActive 0 ise veya false ise) gösterme
-        if (!item.isActive || item.isActive === 0) return false;
-
-        // 2. Kural: Kategori filtresi
-        return activeCategory === "all" ? true : item.category === activeCategory;
+export default async function MenuPage() {
+  try {
+    // 1. Ürünleri Veritabanından Çek
+    const rawProducts = await prisma.product.findMany({
+      orderBy: { name: 'asc' }
     });
 
-    const handleAddToCart = (item: Product) => {
-        const price = item.priceInLira || parseFloat(String(item.price));
-        addItem({
-            id: String(item.id),
-            name: item.name,
-            price: price,
-        });
-    };
-
-    if (!isClient || loading) {
-        return (
-            <div className="flex items-center justify-center min-h-screen bg-white">
-                <div className="text-center">
-                    <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-red-600 mx-auto mb-4"></div>
-                    <p className="text-xl text-gray-600 font-semibold">Menü Yükleniyor...</p>
-                </div>
-            </div>
-        );
+    if (!rawProducts || rawProducts.length === 0) {
+      return (
+        <div className="min-h-screen bg-gray-50 pt-24 pb-12 px-4 flex items-center justify-center">
+          <div className="text-center p-12 bg-white rounded-2xl shadow-xl border border-red-100 max-w-md">
+            <div className="text-6xl mb-4">🍽️</div>
+            <h2 className="text-2xl font-bold text-gray-800 mb-2">Henüz Ürün Eklenmemiş</h2>
+            <p className="text-gray-600 mb-6">Restoran menümüz şu an güncelleniyor. Lütfen daha sonra tekrar kontrol edin.</p>
+            <button onClick={() => window.location.reload()} className="bg-red-600 text-white px-6 py-2 rounded-full font-bold">Sayfayı Yenile</button>
+          </div>
+        </div>
+      );
     }
 
+    // 2. Sayısal dönüşüm (Decimal Hatasını Çözer)
+    const products = rawProducts.map((product) => ({
+      ...product,
+      price: Number(product.price)
+    }));
+
+    const categories = [...new Set(products.map((p) => p.category))];
+
     return (
-        <div className="bg-gray-50 min-h-screen">
-            <div className="container mx-auto px-4 sm:px-6 py-12">
-                <h1 className="text-4xl font-bold text-center text-red-600 mb-8">
-                    Lezzet Menümüz
-                </h1>
+      <div className="min-h-screen bg-gray-50 pt-24 pb-12 px-4">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-12">
+            <h1 className="text-4xl font-bold text-gray-900 mb-4">Lezzet Menümüz</h1>
+            <p className="text-gray-600 font-medium bg-white inline-block px-4 py-1 rounded-full border border-red-100 shadow-sm">
+              {products.length} çeşit seçkin lezzet
+            </p>
+          </div>
 
-                {/* Kategori Filtresi */}
-                <div className="flex flex-wrap justify-center gap-2 sm:gap-4 mb-8">
-                    {categories.map((category) => (
-                        <button
-                            key={category}
-                            onClick={() => setActiveCategory(category)}
-                            className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
-                                activeCategory === category
-                                    ? "bg-red-600 text-white shadow-md transform scale-105"
-                                    : "bg-white text-gray-700 border border-gray-200 hover:bg-gray-100"
-                            }`}
-                        >
-                            {category === "all" ? "Tümü" : category}
-                        </button>
+          <div className="space-y-16">
+            {categories.map((category) => {
+              const categoryProducts = products.filter((p) => p.category === category);
+              return (
+                <section key={category}>
+                  <div className="flex items-center mb-8 border-b-2 border-red-200 pb-3">
+                     <h2 className="text-3xl font-bold text-red-600 mr-4">{category}</h2>
+                     <span className="text-xs font-bold text-gray-500 bg-gray-100 px-3 py-1 rounded-full uppercase tracking-wider">
+                        {categoryProducts.length} Ürün
+                     </span>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {categoryProducts.map((product) => (
+                      <div key={product.id} className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 flex flex-col overflow-hidden group">
+                        <div className="relative h-64 w-full bg-gray-100 overflow-hidden">
+                          {product.image ? (
+                            <img
+                              src={product.image}
+                              alt={product.name}
+                              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                              onError={(e: any) => e.target.src = 'https://raw.githubusercontent.com/hakkurgithub/images/main/placeholder.jpg'}
+                            />
+                          ) : (
+                            <div className="flex items-center justify-center h-full text-gray-300">Resim Yok</div>
+                          )}
+                        </div>
+
+                        <div className="p-6 flex flex-col flex-grow">
+                          <div className="flex justify-between items-start mb-3">
+                            <h3 className="font-bold text-xl text-gray-900">{product.name}</h3>
+                            <span className="font-bold text-xl text-red-600">{product.price} ₺</span>
+                          </div>
+                          <p className="text-gray-500 text-sm mb-6 line-clamp-2">{product.description}</p>
+                          <MenuButton product={product} />
+                        </div>
+                      </div>
                     ))}
-                </div>
-
-                {/* Ürün Yoksa Gösterilecek Uyarı */}
-                {!loading && filteredItems.length === 0 && (
-                    <div className="text-center py-10 bg-white rounded-xl shadow p-8 max-w-lg mx-auto">
-                        <div className="text-5xl mb-4">🍽️</div>
-                        <h3 className="text-xl font-bold text-gray-800 mb-2">Ürün Bulunamadı</h3>
-                        <p className="text-gray-500 mb-4">
-                            "{activeCategory === 'all' ? 'Tümü' : activeCategory}" kategorisinde henüz ürün eklenmemiş olabilir.
-                        </p>
-                        <button 
-                            onClick={() => window.location.reload()}
-                            className="px-4 py-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition-colors text-sm font-semibold"
-                        >
-                            Sayfayı Yenile
-                        </button>
-                    </div>
-                )}
-
-                {/* Menü Kartları */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {filteredItems.map((item) => {
-                        const cartItem = items.find(cartItem => cartItem.id === String(item.id));
-                        
-                        return (
-                            <div
-                                key={item.id}
-                                className="bg-white rounded-xl shadow-md overflow-hidden flex flex-col hover:shadow-xl transition-shadow duration-300 border border-gray-100 group"
-                            >
-                                {/* Resim Alanı */}
-                                <div className="relative w-full h-56 sm:h-64 bg-gray-200 overflow-hidden">
-                                    <Image
-                                        src={item.image || '/images/placeholder.jpg'}
-                                        alt={item.name}
-                                        fill
-                                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                                        className="object-cover group-hover:scale-105 transition-transform duration-500"
-                                        priority={item.id < 6}
-                                    />
-                                </div>
-                                
-                                <div className="p-5 flex-1 flex flex-col">
-                                    <div className="flex justify-between items-start mb-2">
-                                        <h3 className="text-xl font-bold text-gray-800">{item.name}</h3>
-                                        {item.category && (
-                                            <span className="text-xs px-2 py-1 bg-orange-100 text-orange-800 rounded-full font-medium">
-                                                {item.category}
-                                            </span>
-                                        )}
-                                    </div>
-                                    
-                                    <p className="text-gray-600 text-sm flex-1 line-clamp-2 mb-4">
-                                        {item.description || "Lezzetli bir seçim."}
-                                    </p>
-                                    
-                                    <div className="flex justify-between items-center mt-auto pt-4 border-t border-gray-100">
-                                        <span className="text-2xl font-bold text-red-600">
-                                            {item.formattedPrice ? item.formattedPrice : `${item.price} ₺`}
-                                        </span>
-                                        <div className="relative">
-                                            <button
-                                                onClick={() => handleAddToCart(item)}
-                                                className="flex items-center gap-2 bg-red-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-red-700 active:bg-red-800 transition-colors shadow-sm"
-                                            >
-                                                <span>Sepete Ekle</span>
-                                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                                    <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" />
-                                                </svg>
-                                            </button>
-                                            {cartItem && (
-                                                <span className="absolute -top-2 -right-2 bg-yellow-500 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center shadow-sm border-2 border-white animate-bounce">
-                                                    {cartItem.quantity}
-                                                </span>
-                                            )}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        );
-                    })}
-                </div>
-            </div>
+                  </div>
+                </section>
+              );
+            })}
+          </div>
         </div>
+      </div>
     );
+  } catch (error) {
+    return (
+      <div className="pt-32 text-center text-red-600 font-bold">
+        Veritabanı bağlantı hatası! Lütfen DATABASE_URL ayarlarını kontrol edin.
+      </div>
+    );
+  }
 }

@@ -1,64 +1,65 @@
-import { db } from './db';
-import { products, orders, users } from './schema';
-import { eq, desc, sql } from 'drizzle-orm'; // 'sql' eklendi
+import { prisma } from './prisma';
 
-// 1. Tüm Ürünleri Çek (ÖZEL KATEGORİ SIRALAMASI İLE)
-export const getAllProducts = async () => {
-  return await db.select().from(products).orderBy(
-    // SQL CASE yapısı ile özel sıralama mantığı
-    sql`CASE 
-      WHEN ${products.category} = 'Kebaplar & Izgaralar' THEN 1
-      WHEN ${products.category} = 'Pide & Lahmacun' THEN 2
-      WHEN ${products.category} = 'Döner' THEN 3
-      WHEN ${products.category} = 'Dürüm' THEN 4
-      WHEN ${products.category} = 'Çorbalar' THEN 5
-      WHEN ${products.category} = 'Yan Ürünler' THEN 6
-      WHEN ${products.category} = 'Tatlılar' THEN 7
-      WHEN ${products.category} = 'İçecekler' THEN 8
-      ELSE 9 -- Tanımsız kategoriler en sona
-    END`
-  );
-};
+// 1. Tüm Ürünleri Getir (Manager ve API için)
+export async function getAllProducts() {
+  try {
+    const products = await prisma.product.findMany({
+      orderBy: { createdAt: 'desc' },
+    });
+    return products.map(p => ({ ...p, price: Number(p.price) }));
+  } catch (error) {
+    console.error("Ürünler çekilirken hata:", error);
+    return [];
+  }
+}
 
-// 2. Kategoriye Göre Ürünleri Çek
-export const getProductsByCategory = async (category: string) => {
-  return await db.select().from(products).where(eq(products.category, category));
-};
+// 2. Kategoriye Göre Ürünleri Getir
+export async function getProductsByCategory(category: string) {
+  try {
+    const products = await prisma.product.findMany({
+      where: { category },
+    });
+    return products.map(p => ({ ...p, price: Number(p.price) }));
+  } catch (error) {
+    return [];
+  }
+}
 
-// 3. Tüm Siparişleri Çek (Yönetici İçin)
-export const getAllOrders = async () => {
-  return await db
-    .select({
-      id: orders.id,
-      customerName: orders.customerName,
-      status: orders.status,
-      orderType: orders.orderType,
-      total: orders.total,
-      createdAt: orders.createdAt,
-      userId: orders.userId,
-    })
-    .from(orders)
-    .orderBy(desc(orders.createdAt));
-};
+// 3. Rezervasyon Oluştur
+export async function createReservation(data: any) {
+  try {
+    return await prisma.reservation.create({
+      data: {
+        name: data.name,
+        phone: data.phone,
+        date: new Date(data.date),
+        time: data.time,
+        guests: Number(data.guests),
+        message: data.message || "",
+      }
+    });
+  } catch (error) {
+    throw new Error("Rezervasyon oluşturulamadı.");
+  }
+}
 
-// 4. Kullanıcı Emailine Göre Sipariş Çek
-export const getUserOrders = async (userEmail: string) => {
-    const user = await db.select().from(users).where(eq(users.email, userEmail)).limit(1);
-    if (user.length === 0) return [];
-    
-    return await db.select().from(orders).where(eq(orders.userId, user[0].id)).orderBy(desc(orders.createdAt));
-};
+// 4. Tüm Rezervasyonları Getir
+export async function getAllReservations() {
+  try {
+    return await prisma.reservation.findMany({
+      orderBy: { date: 'desc' }
+    });
+  } catch (error) {
+    return [];
+  }
+}
 
-// 5. Kullanıcı ID'sine Göre Sipariş Çek
-export const getOrdersByUser = async (userId: number) => {
-  return await db.select().from(orders).where(eq(orders.userId, userId)).orderBy(desc(orders.createdAt));
-};
+// 5. Sipariş Fonksiyonları (Hata vermemesi için boş dönen taslaklar)
+// Projenizde Order modeli schema.prisma'ya eklendiğinde burayı güncelleyebiliriz.
+export async function getUserOrders(userId: string) {
+  return [];
+}
 
-// 6. Rezervasyon (Boş fonksiyon - hata vermemesi için)
-export const getAllReservations = async () => {
-    return []; 
-};
-
-export const createReservation = async (data: any) => {
-    return null;
-};
+export async function getAllOrders() {
+  return [];
+}

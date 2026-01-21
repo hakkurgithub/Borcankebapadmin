@@ -1,0 +1,33 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// BORCAN KEBAP ÜRÜN TABLOSU
+model Product {
+  id          String   @id @default(cuid())
+  name        String   // Örn: Urfa Kebap
+  description String?  // Örn: Zırh kıyması, közlenmiş biber ile
+  price       Decimal  @db.Decimal(10, 2)
+  image       String?  // GitHub üzerindeki resim linki
+  category    String   // Örn: Kebaplar, Pideler, Dönerler
+  isPopular   Boolean  @default(false) // Ana sayfada görünsün mü?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// İLETİŞİM VE REZERVASYON TABLOSU
+model Reservation {
+  id        String   @id @default(cuid())
+  name      String
+  phone     String
+  date      DateTime
+  time      String
+  guests    Int
+  message   String?
+  createdAt DateTime @default(now())
+}
