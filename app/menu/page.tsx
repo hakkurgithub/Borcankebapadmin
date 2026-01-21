@@ -1,5 +1,4 @@
 'use client';
-
 import { useEffect, useState } from 'react';
 import MenuButton from './MenuButton';
 
@@ -17,8 +16,8 @@ export default function MenuPage() {
       .catch(() => setError(true));
   }, []);
 
-  if (error) return <div className="pt-32 text-center text-red-600 font-bold">Bağlantı tazeleyiniz...</div>;
-  if (!products.length) return <div className="pt-32 text-center font-bold">Lezzetler hazırlanıyor...</div>;
+  if (error) return <div className="pt-32 text-center text-red-600 font-bold">Veritabanı hatası! Lütfen sayfayı yenileyin.</div>;
+  if (!products.length) return <div className="pt-32 text-center font-bold">Menü hazırlanıyor...</div>;
 
   const categories = [...new Set(products.map(p => p.category))];
 
