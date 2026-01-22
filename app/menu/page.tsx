@@ -1,7 +1,5 @@
 'use client';
-
 export const dynamic = "force-dynamic";
-
 import { useEffect, useState } from 'react';
 import MenuButton from './MenuButton';
 
@@ -10,22 +8,21 @@ export default function MenuPage() {
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    fetch('/api/menu')
-      .then(res => res.json())
-      .then(data => {
-        if (data.error) setError(true);
-        else setProducts(data);
-      })
-      .catch(() => setError(true));
+    fetch('/api/menu').then(res => res.json()).then(data => {
+      if (data.error) setError(true);
+      else setProducts(data);
+    }).catch(() => setError(true));
   }, []);
 
   if (error) return <div className="pt-32 text-center text-red-600 font-bold">Bağlantı tazeleyiniz...</div>;
   if (!products.length) return <div className="pt-32 text-center font-bold">Lezzetler hazırlanıyor...</div>;
 
-  const priority = ["Izgaralar", "Kebaplar", "Dürümler", "Mezeler", "Salatalar", "Tatlılar", "İçecekler"];
-  const categories = [...new Set(products.map((p: any) => p.category))].sort((a, b) => {
-    const indexA = priority.indexOf(a as string);
-    const indexB = priority.indexOf(b as string);
+  // ÖNCELİKLİ SIRALAMA: Izgaralar en başta, İçecekler en sonda
+  const priority = ["Izgaralar", "Kebaplar", "Dürümler", "Mezeler", "Tatlılar", "İçecekler"];
+  const categories = [...new Set(products.map((p: any) => p.category))].sort((a: any, b: any) => {
+    const indexA = priority.indexOf(a);
+    const indexB = priority.indexOf(b);
+    if (indexA === -1 && indexB === -1) return a.localeCompare(b);
     if (indexA === -1) return 1;
     if (indexB === -1) return -1;
     return indexA - indexB;
@@ -34,7 +31,7 @@ export default function MenuPage() {
   return (
     <div className="min-h-screen bg-gray-50 pt-24 pb-12 px-4">
       <div className="max-w-7xl mx-auto space-y-16">
-        {categories.map((category: any) => (
+        {categories.map((category) => (
           <section key={category}>
             <h2 className="text-3xl font-bold text-red-600 mb-8 border-b pb-3">{category}</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
