@@ -1,7 +1,7 @@
 import { authOptions } from "../../lib/auth"; // Auth ayarlarını çekiyoruz
 import { getServerSession } from "next-auth"; // Sunucu tarafı oturum kontrolü
 import { redirect } from "next/navigation";
-import { getAllOrders, getAllProducts } from "../../lib/products";
+import { getUserOrders, getAllProducts } from "../../lib/products";
 import Link from "next/link";
 
 export default async function ManagerPage() {
