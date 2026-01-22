@@ -4,7 +4,6 @@ import { prisma } from '../../../lib/prisma'
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    // Sepetten gelen verileri veritabanına kaydeder
     // @ts-ignore
     const order = await prisma.orders.create({
       data: {
@@ -16,7 +15,6 @@ export async function POST(request: NextRequest) {
     })
     return NextResponse.json({ success: true, data: order })
   } catch (error) {
-    console.error("Sipariş hatası:", error)
     return NextResponse.json({ success: false, error: "Bağlantı hatası" }, { status: 500 })
   }
 }
