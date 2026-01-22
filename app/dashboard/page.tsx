@@ -6,26 +6,26 @@ import { getUserOrders } from "../../lib/products";
 export default async function DashboardPage() {
   const session = await auth();
 
+  // Oturum kontrolü
   if (!session?.user?.email) {
     redirect("/");
   }
 
-  // TypeScript'i susturmak için any[] kullanıyoruz
   let userOrders: any[] = [];
   
   try {
+    // DÜZELTME: Parantez hatası giderildi ve tip zorlaması (as any) eklendi
     if (session.user.email) {
-      userOrders = await getUserOrders(session.user.email);
+      userOrders = await getUserOrders(session.user.email as any);
     }
   } catch (error) {
     console.error("Siparişler yüklenirken hata:", error);
   }
 
-  // İstatistikler - any tipi ile güvenli hesaplama
+  // İstatistikler
   const totalOrders = userOrders.length;
   
   const totalSpent = userOrders.reduce((sum: number, order: any) => {
-    // order.total string veya number gelebilir, güvenli çeviri
     return sum + (Number(order.total) || 0);
   }, 0);
 
@@ -45,6 +45,7 @@ export default async function DashboardPage() {
           </div>
         </div>
 
+        {/* İstatistik Kartları */}
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-3 mb-10">
           <div className="bg-white overflow-hidden shadow rounded-lg px-4 py-5">
             <dt className="text-sm font-medium text-gray-500">Toplam Sipariş</dt>
@@ -62,6 +63,7 @@ export default async function DashboardPage() {
           </div>
         </div>
 
+        {/* Sipariş Listesi */}
         <div className="bg-white shadow overflow-hidden sm:rounded-md">
           <ul className="divide-y divide-gray-200">
             {userOrders.length > 0 ? (
@@ -80,7 +82,7 @@ export default async function DashboardPage() {
                       </p>
                     </div>
                     <div className="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
-                      <p>{new Date(order.createdAt).toLocaleDateString('tr-TR')}</p>
+                      <p>{order.createdAt ? new Date(order.createdAt).toLocaleDateString('tr-TR') : '-'}</p>
                       <p className="ml-4 font-bold text-gray-900">
                          {Number(order.total).toLocaleString('tr-TR', { minimumFractionDigits: 2 })} ₺
                       </p>

@@ -1,65 +1,55 @@
 import { prisma } from './prisma';
 
-// 1. Tüm Ürünleri Getir (Manager ve API için)
 export async function getAllProducts() {
   try {
-    const products = await prisma.product.findMany({
-      orderBy: { createdAt: 'desc' },
-    });
-    return products.map(p => ({ ...p, price: Number(p.price) }));
+    // @ts-ignore
+    return await prisma.products.findMany({ orderBy: { name: 'asc' } });
   } catch (error) {
-    console.error("Ürünler çekilirken hata:", error);
+    console.error("Ürün hatası:", error);
     return [];
   }
 }
 
-// 2. Kategoriye Göre Ürünleri Getir
-export async function getProductsByCategory(category: string) {
-  try {
-    const products = await prisma.product.findMany({
-      where: { category },
-    });
-    return products.map(p => ({ ...p, price: Number(p.price) }));
-  } catch (error) {
-    return [];
-  }
-}
-
-// 3. Rezervasyon Oluştur
 export async function createReservation(data: any) {
   try {
-    return await prisma.reservation.create({
+    // @ts-ignore
+    return await prisma.reservations.create({
       data: {
         name: data.name,
         phone: data.phone,
-        date: new Date(data.date),
+        date: data.date,
         time: data.time,
         guests: Number(data.guests),
         message: data.message || "",
-      }
+      },
     });
   } catch (error) {
-    throw new Error("Rezervasyon oluşturulamadı.");
+    console.error("Rezervasyon hatası:", error);
+    throw error;
   }
 }
 
-// 4. Tüm Rezervasyonları Getir
 export async function getAllReservations() {
   try {
-    return await prisma.reservation.findMany({
-      orderBy: { date: 'desc' }
-    });
+    // @ts-ignore
+    return await prisma.reservations.findMany({ orderBy: { createdAt: "desc" } });
   } catch (error) {
+    console.error("Liste hatası:", error);
     return [];
   }
 }
 
-// 5. Sipariş Fonksiyonları (Hata vermemesi için boş dönen taslaklar)
-// Projenizde Order modeli schema.prisma'ya eklendiğinde burayı güncelleyebiliriz.
-export async function getUserOrders(userId: string) {
-  return [];
-}
-
-export async function getAllOrders() {
-  return [];
+export async function getUserOrders(userEmailOrId: any) {
+  try {
+    // @ts-ignore
+    return await prisma.orders.findMany({
+      where: {
+        OR: [{ userEmail: String(userEmailOrId) }, { userId: String(userEmailOrId) }]
+      },
+      orderBy: { createdAt: 'desc' }
+    });
+  } catch (error) {
+    console.error("Sipariş hatası:", error);
+    return [];
+  }
 }

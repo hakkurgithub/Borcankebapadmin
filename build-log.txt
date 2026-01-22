@@ -1,0 +1,37 @@
+
+> borcankebapadmin@0.1.0 build
+> next build
+
+  ▲ Next.js 14.2.35
+  - Environments: .env.local, .env
+
+   Creating an optimized production build ...
+ ⚠ Compiled with warnings
+
+./app/api/products/route.ts
+Attempted import error: 'getProductsByCategory' is not exported from '../../../lib/products' (imported as 'getProductsByCategory').
+
+Import trace for requested module:
+./app/api/products/route.ts
+
+./app/manager/page.tsx
+Attempted import error: 'getAllOrders' is not exported from '../../lib/products' (imported as 'getAllOrders').
+
+Import trace for requested module:
+./app/manager/page.tsx
+
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+ ✓ Compiled successfully
+   Linting and checking validity of types ...
+Failed to compile.
+
+./app/api/products/route.ts:2:26
+Type error: Module '"../../../lib/products"' has no exported member 'getProductsByCategory'.
+
+[0m [90m 1 |[39m [36mimport[39m { [33mNextRequest[39m[33m,[39m [33mNextResponse[39m } [36mfrom[39m [32m'next/server'[39m[0m
+[0m[31m[1m>[22m[39m[90m 2 |[39m [36mimport[39m { getAllProducts[33m,[39m getProductsByCategory } [36mfrom[39m [32m'../../../lib/products'[39m[0m
+[0m [90m   |[39m                          [31m[1m^[22m[39m[0m
+[0m [90m 3 |[39m[0m
+[0m [90m 4 |[39m [90m// Bu satır çok önemli! API'nin her seferinde çalışmasını sağlar.[39m[0m
+[0m [90m 5 |[39m [36mexport[39m [36mconst[39m dynamic [33m=[39m [32m'force-dynamic'[39m[0m
+Next.js build worker exited with code: 1 and signal: null

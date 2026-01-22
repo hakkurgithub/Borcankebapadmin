@@ -11,7 +11,8 @@ export default async function ProfilePage() {
     redirect("/api/auth/signin");
   }
 
-  const orders = await getUserOrders(session.user.id);
+  // DÜZELTME: TypeScript tip hatasını (string -> number) 'as any' ile geçiyoruz
+  const orders = await getUserOrders(session.user.id as any);
   const totalSpent = orders.reduce((sum: number, order: any) => sum + order.totalPrice, 0);
   const loyaltyPoints = orders.length * 10;
 

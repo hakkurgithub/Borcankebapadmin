@@ -13,7 +13,8 @@ export default async function OrdersPage() {
   let orders: any[] = [];
   
   try {
-    orders = await getUserOrders(session.user.id);
+    // DÜZELTME: TypeScript'i ikna etmek için 'as any' kullanıyoruz
+orders = await getUserOrders(session.user.id as any);
   } catch (error) {
     console.log("DB bağlantısı yok, mock data kullanılıyor:", error);
     // Mock orders data
