@@ -17,7 +17,6 @@ export default function MenuPage() {
   if (error) return <div className="pt-32 text-center text-red-600 font-bold">Bağlantı tazeleyiniz...</div>;
   if (!products.length) return <div className="pt-32 text-center font-bold">Lezzetler hazırlanıyor...</div>;
 
-  // İSTEDİĞİNİZ SIRALAMA: Izgaralar en üstte
   const priority = ["Izgaralar", "Kebaplar", "Dürümler", "Mezeler", "Salatalar", "Tatlılar", "İçecekler"];
   const categories = [...new Set(products.map((p: any) => p.category))].sort((a: any, b: any) => {
     const indexA = priority.indexOf(a);
