@@ -35,7 +35,7 @@ export default function CartPage() {
         ))}
         <div className="text-right mt-8 pt-6 border-t border-gray-200">
           <p className="text-2xl font-bold mb-6 text-gray-800">Toplam: <span className="text-red-600">{totalPrice} TL</span></p>
-          <button onClick={handleWhatsAppOrder} className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 rounded-xl text-xl shadow-lg transition-transform active:scale-95">
+          <button onClick={handleWhatsAppOrder} className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 rounded-xl text-xl shadow-lg transition-transform active:scale-95 flex items-center justify-center gap-2">
             Siparişi WhatsApp ile Tamamla
           </button>
         </div>
