@@ -1,5 +1,5 @@
 'use client';
-import { useCart } from '@/context/CartContext';
+import { useCart } from '../context/CartContext';
 
 export default function CartPage() {
   const { cart, removeFromCart, updateQuantity, totalPrice } = useCart();
@@ -7,7 +7,7 @@ export default function CartPage() {
   const handleWhatsAppOrder = () => {
     const message = cart.map(item => `- ${item.name} (${item.quantity} Adet) - ${item.price * item.quantity} TL`).join('%0A');
     const finalMessage = `*Yeni Sipariş (Borcan Kebap)*%0A%0A${message}%0A%0A*Toplam Tutar: ${totalPrice} TL*`;
-    window.open(`https://wa.me/905333715577?text=${finalMessage}`, '_blank');
+    window.open(`https://wa.me/905455093462?text=Merhaba20Borcan%20Kebap'tan%20sipariş%20vermek%20istiyorum.%0A%0A${finalMessage}
   };
 
   if (cart.length === 0) return <div className="pt-32 text-center text-xl font-bold text-gray-500">Sepetiniz boş.</div>;
