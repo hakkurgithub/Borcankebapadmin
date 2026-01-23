@@ -1,79 +1,45 @@
-"use client";
-import React, { useState } from "react";
-import { useCart } from "@/components/CartProvider";
-import Image from "next/image";
-import Link from "next/link";
+'use client';
+import { useCart } from '../../context/CartContext';
 
 export default function CartPage() {
-  const { items, removeItem, updateQuantity, clearCart } = useCart();
-  const total = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { cart, removeFromCart, updateQuantity, totalPrice } = useCart();
 
-  const handleCheckout = async () => {
-    if (items.length === 0) return;
-    setIsSubmitting(true);
-    try {
-      const response = await fetch("/api/create-order", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          items: items,
-          total: total,
-          customer: { name: "Web Müşterisi" }
-        }),
-      });
-      const data = await response.json();
-      if (data.success) {
-        alert("✅ Siparişiniz başarıyla alındı!");
-        clearCart();
-        window.location.href = "/";
-      } else {
-        alert("❌ Hata oluştu.");
-      }
-    } catch (error) {
-      alert("Bağlantı hatası!");
-    } finally {
-      setIsSubmitting(false);
-    }
+  const handleWhatsAppOrder = () => {
+    const message = cart.map(item => `- ${item.name} (${item.quantity} Adet) - ${item.price * item.quantity} TL`).join('%0A');
+    const finalMessage = `*Yeni Sipariş (Borcan Kebap)*%0A%0A${message}%0A%0A*Toplam Tutar: ${totalPrice} TL*`;
+    window.open(`https://wa.me/905333715577?text=${finalMessage}`, '_blank');
   };
 
-  if (items.length === 0) {
-    return (
-      <div className="min-h-screen pt-32 px-4 flex flex-col items-center justify-center text-center">
-        <h2 className="text-2xl font-bold text-stone-800 mb-2">Sepetiniz Boş</h2>
-        <Link href="/menu" className="bg-red-700 text-white px-8 py-3 rounded-full font-bold">Menüyü İncele</Link>
-      </div>
-    );
-  }
+  if (cart.length === 0) return <div className="pt-32 text-center text-xl font-bold text-gray-500">Sepetiniz boş.</div>;
 
   return (
-    <div className="min-h-screen pt-32 px-4 pb-20 max-w-4xl mx-auto">
-      <h1 className="text-3xl font-bold text-center mb-12 text-stone-800">Sepetim</h1>
-      <div className="bg-white rounded-2xl shadow-xl overflow-hidden p-6 space-y-6">
-        {items.map((item) => (
-          <div key={item.id} className="flex items-center gap-4 py-4 border-b border-stone-100">
-            <div className="relative w-20 h-20 flex-shrink-0 rounded-lg overflow-hidden bg-stone-100">
-              {(item as any).image && <Image src={(item as any).image} alt={item.name} fill className="object-cover" />}
+    <div className="min-h-screen bg-gray-50 pt-24 pb-12 px-4">
+      <div className="max-w-3xl mx-auto bg-white p-8 rounded-2xl shadow-lg">
+        <h1 className="text-3xl font-bold mb-8 border-b pb-4">Sepetim</h1>
+        {cart.map((item) => (
+          <div key={item.id} className="flex justify-between items-center mb-6 border-b pb-4">
+            <div>
+              <h3 className="font-bold text-lg">{item.name}</h3>
+              <p className="text-red-600 font-bold">{item.price} TL</p>
             </div>
-            <div className="flex-grow">
-              <h3 className="font-bold text-lg text-stone-800">{item.name}</h3>
-              <p className="text-red-700 font-bold">{item.price} TL</p>
+            <div className="flex items-center gap-4">
+              <input 
+                type="number" 
+                value={item.quantity} 
+                onChange={(e) => updateQuantity(item.id, parseInt(e.target.value))}
+                className="w-16 border rounded p-1 text-center"
+              />
+              <button onClick={() => removeFromCart(item.id)} className="text-red-500 font-bold">Sil</button>
             </div>
-            <div className="flex items-center gap-3">
-              <button onClick={() => updateQuantity(item.id, Math.max(0, item.quantity - 1))} className="w-8 h-8 rounded-full bg-stone-100 font-bold">-</button>
-              <span className="font-bold">{item.quantity}</span>
-              <button onClick={() => updateQuantity(item.id, item.quantity + 1)} className="w-8 h-8 rounded-full bg-stone-100 font-bold">+</button>
-            </div>
-            <button onClick={() => removeItem(item.id)} className="text-red-500">Sil</button>
           </div>
         ))}
-        <div className="pt-6">
-          <div className="flex justify-between items-center mb-8">
-            <span className="text-xl font-bold">Toplam:</span>
-            <span className="text-3xl font-bold text-red-700">{total} TL</span>
-          </div>
-          <button onClick={handleCheckout} disabled={isSubmitting} className="w-full bg-green-600 text-white py-4 rounded-xl font-bold">
-            {isSubmitting ? 'İşleniyor...' : '✅ Siparişi Tamamla'}
+        <div className="text-right mt-8">
+          <p className="text-2xl font-bold mb-6">Toplam: <span className="text-red-600">{totalPrice} TL</span></p>
+          <button 
+            onClick={handleWhatsAppOrder}
+            className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 rounded-xl text-xl transition-all shadow-lg"
+          >
+            Siparişi WhatsApp ile Tamamla
           </button>
         </div>
       </div>
