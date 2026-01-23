@@ -37,7 +37,7 @@ export default function CartPage() {
           <p className="text-2xl font-bold mb-6">Toplam: <span className="text-red-600">{totalPrice} TL</span></p>
           <button 
             onClick={handleWhatsAppOrder}
-            className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 rounded-xl text-xl transition-all shadow-lg"
+            className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 rounded-xl text-xl shadow-lg"
           >
             Siparişi WhatsApp ile Tamamla
           </button>

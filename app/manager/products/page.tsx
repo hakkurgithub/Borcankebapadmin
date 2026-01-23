@@ -17,7 +17,7 @@ export default function AdminProducts() {
             <div key={p.id} className="bg-white rounded-2xl shadow-sm overflow-hidden border group relative">
               <div className="relative h-48">
                 <img src={p.image} className="w-full h-full object-cover" />
-                <div className="absolute top-2 right-2 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                <div className="absolute top-2 right-2 flex gap-2 opacity-100 transition-opacity">
                   <button className="bg-blue-600 text-white p-2 rounded-lg text-xs font-bold shadow-md">Düzenle</button>
                   <button className="bg-red-600 text-white p-2 rounded-lg text-xs font-bold shadow-md">Sil</button>
                 </div>
