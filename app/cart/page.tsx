@@ -9,7 +9,7 @@ export default function CartPage() {
     if (savedCart) setCart(JSON.parse(savedCart));
   }, []);
 
-  const totalPrice = cart.reduce((sum, item: any) => sum + (item.price * item.quantity), 0);
+  const totalPrice = cart.reduce((sum, item: any) => sum + (Number(item.price) * Number(item.quantity)), 0);
 
   const handleWhatsAppOrder = () => {
     const message = cart.map((item: any) => `- ${item.name} (${item.quantity} Adet) - ${item.price * item.quantity} TL`).join('%0A');
@@ -18,10 +18,10 @@ export default function CartPage() {
     window.open(waUrl, '_blank');
   };
 
-  if (cart.length === 0) return <div className="pt-32 text-center text-xl font-bold text-gray-500 font-sans">Sepetiniz boş.</div>;
+  if (cart.length === 0) return <div className="pt-32 text-center text-xl font-bold text-gray-500">Sepetiniz boş.</div>;
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-24 pb-12 px-4 font-sans">
+    <div className="min-h-screen bg-gray-50 pt-24 pb-12 px-4">
       <div className="max-w-3xl mx-auto bg-white p-8 rounded-2xl shadow-lg border border-gray-100">
         <h1 className="text-3xl font-bold mb-8 border-b pb-4 text-gray-800">Sepetim</h1>
         {cart.map((item: any) => (
@@ -30,17 +30,12 @@ export default function CartPage() {
               <h3 className="font-bold text-lg text-gray-800">{item.name}</h3>
               <p className="text-red-600 font-bold">{item.price} TL</p>
             </div>
-            <div className="text-gray-600 font-bold">
-              {item.quantity} Adet
-            </div>
+            <div className="text-gray-600 font-bold">{item.quantity} Adet</div>
           </div>
         ))}
         <div className="text-right mt-8 pt-6 border-t border-gray-200">
           <p className="text-2xl font-bold mb-6 text-gray-800">Toplam: <span className="text-red-600">{totalPrice} TL</span></p>
-          <button 
-            onClick={handleWhatsAppOrder}
-            className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 rounded-xl text-xl shadow-lg transition-transform active:scale-95 flex items-center justify-center gap-2"
-          >
+          <button onClick={handleWhatsAppOrder} className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 rounded-xl text-xl shadow-lg transition-transform active:scale-95">
             Siparişi WhatsApp ile Tamamla
           </button>
         </div>
