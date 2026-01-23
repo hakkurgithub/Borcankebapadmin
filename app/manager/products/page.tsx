@@ -1,156 +1,30 @@
-"use client";
+'use client';
+import { useEffect, useState } from 'react';
 
-import { useEffect, useState } from "react";
-import {
-  addProduct,
-  deleteProduct,
-  updateProduct,
-  getManagerProducts,
-  toggleProductStatus,
-  ProductDTO,
-} from "../../../lib/actions";
-
-export default function ManagerProductsPage() {
-  const [products, setProducts] = useState<ProductDTO[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  const [formData, setFormData] = useState({
-    id: 0,
-    name: "",
-    description: "",
-    category: "",
-    image: "",
-    price: 0,
-  });
-
-  const [isEditing, setIsEditing] = useState(false);
-
-  /* ===============================
-     LOAD PRODUCTS
-  ================================ */
-  async function loadProducts() {
-    setLoading(true);
-    const data = await getManagerProducts();
-    setProducts(data);
-    setLoading(false);
-  }
+export default function AdminProducts() {
+  const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    loadProducts();
+    fetch('/api/products').then(res => res.json()).then(setProducts);
   }, []);
 
-  /* ===============================
-     SUBMIT
-  ================================ */
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-
-    if (isEditing) {
-      await updateProduct(formData.id, {
-        name: formData.name,
-        description: formData.description,
-        category: formData.category,
-        image: formData.image,
-        price: formData.price,
-      });
-    } else {
-      await addProduct({
-        name: formData.name,
-        description: formData.description,
-        category: formData.category,
-        image: formData.image,
-        price: formData.price,
-      });
-    }
-
-    setFormData({
-      id: 0,
-      name: "",
-      description: "",
-      category: "",
-      image: "",
-      price: 0,
-    });
-
-    setIsEditing(false);
-    loadProducts();
-  }
-
-  /* ===============================
-     RENDER
-  ================================ */
-  if (loading) return <p>Yükleniyor...</p>;
-
   return (
-    <div style={{ padding: 20 }}>
-      <h1>Ürün Yönetimi</h1>
-
-      <form onSubmit={handleSubmit}>
-        <input
-          placeholder="Ürün adı"
-          value={formData.name}
-          onChange={(e) =>
-            setFormData({ ...formData, name: e.target.value })
-          }
-        />
-        <input
-          placeholder="Kategori"
-          value={formData.category}
-          onChange={(e) =>
-            setFormData({ ...formData, category: e.target.value })
-          }
-        />
-        <input
-          type="number"
-          placeholder="Fiyat"
-          value={formData.price}
-          onChange={(e) =>
-            setFormData({ ...formData, price: Number(e.target.value) })
-          }
-        />
-        <button type="submit">
-          {isEditing ? "Güncelle" : "Ekle"}
-        </button>
-      </form>
-
-      <hr />
-
-      {products.map((p) => (
-        <div key={p.id} style={{ marginBottom: 10 }}>
-          <b>{p.name}</b> – {p.price} ₺ –{" "}
-          {p.isPopular ? "Aktif" : "Pasif"}
-
-          <button
-            onClick={() =>
-              toggleProductStatus(p.id, !p.isPopular).then(loadProducts)
-            }
-          >
-            Durum Değiştir
-          </button>
-
-          <button
-            onClick={() => {
-              setIsEditing(true);
-              setFormData({
-                id: p.id,
-                name: p.name,
-                description: p.description ?? "",
-                category: p.category,
-                image: p.image ?? "",
-                price: p.price,
-              });
-            }}
-          >
-            Düzenle
-          </button>
-
-          <button
-            onClick={() => deleteProduct(p.id).then(loadProducts)}
-          >
-            Sil
-          </button>
-        </div>
-      ))}
+    <div className="p-8 pt-24 bg-gray-100 min-h-screen">
+      <h1 className="text-3xl font-bold mb-8">Ürün Yönetimi</h1>
+      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {products.map((p: any) => (
+          <div key={p.id} className="bg-white p-4 rounded-xl shadow relative group">
+            <img src={p.image} className="w-full h-40 object-cover rounded-lg mb-4" />
+            <h3 className="font-bold">{p.name}</h3>
+            <p className="text-red-600 font-bold">{p.price} ₺</p>
+            {/* Ürün Üzerindeki Düzenleme Paneli */}
+            <div className="absolute top-2 right-2 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+              <button className="bg-blue-600 text-white p-2 rounded-lg text-xs">Düzenle</button>
+              <button className="bg-red-600 text-white p-2 rounded-lg text-xs">Sil</button>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
