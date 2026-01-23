@@ -21,7 +21,7 @@ export default async function ManagerPage() {
   let dbError: string | null = null;
   
   try {
-    // // allOrders = await getAllOrders();
+    // // // allOrders = await getAllOrders();
     allProducts = await getAllProducts();
   } catch (error) {
     console.error("❌ Yönetici Paneli Hatası:", error);
