@@ -18,10 +18,10 @@ export default function CartPage() {
     window.open(waUrl, '_blank');
   };
 
-  if (cart.length === 0) return <div className="pt-32 text-center text-xl font-bold text-gray-500">Sepetiniz boş.</div>;
+  if (cart.length === 0) return <div className="pt-32 text-center text-xl font-bold text-gray-500 font-sans">Sepetiniz boş.</div>;
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-24 pb-12 px-4">
+    <div className="min-h-screen bg-gray-50 pt-24 pb-12 px-4 font-sans">
       <div className="max-w-3xl mx-auto bg-white p-8 rounded-2xl shadow-lg border border-gray-100">
         <h1 className="text-3xl font-bold mb-8 border-b pb-4 text-gray-800">Sepetim</h1>
         {cart.map((item: any) => (
