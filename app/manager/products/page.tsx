@@ -17,15 +17,14 @@ export default function AdminProducts() {
             <div key={p.id} className="bg-white rounded-2xl shadow-sm overflow-hidden border group relative">
               <div className="relative h-48">
                 <img src={p.image} className="w-full h-full object-cover" />
-                {/* Her ürünün üzerinde Düzenle/Sil butonları */}
                 <div className="absolute top-2 right-2 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <button className="bg-blue-600 text-white p-2 rounded-lg text-xs font-bold">Düzenle</button>
-                  <button className="bg-red-600 text-white p-2 rounded-lg text-xs font-bold">Sil</button>
+                  <button className="bg-blue-600 text-white p-2 rounded-lg text-xs font-bold shadow-md">Düzenle</button>
+                  <button className="bg-red-600 text-white p-2 rounded-lg text-xs font-bold shadow-md">Sil</button>
                 </div>
               </div>
               <div className="p-4">
                 <span className="text-xs text-gray-400 uppercase font-bold">{p.category}</span>
-                <h3 className="font-bold truncate">{p.name}</h3>
+                <h3 className="font-bold truncate text-gray-800">{p.name}</h3>
                 <p className="text-red-600 font-bold text-lg">{p.price} ₺</p>
               </div>
             </div>
