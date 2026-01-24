@@ -1,67 +1,67 @@
 'use client';
 
-import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
 
-// Sayfayi sadece tarayicida calisacak sekilde zorlar (Vercel donmasini engeller)
-const CartComponent = () => {
+export default function CartPage() {
   const [cart, setCart] = useState<any[]>([]);
-  const [mounted, setMounted] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setMounted(true);
-    const savedCart = localStorage.getItem('cart');
-    if (savedCart) {
-      try { setCart(JSON.parse(savedCart)); } catch (e) { console.error('Hata'); }
+    // Tarayıcı hafızasını zorla oku ve sunucuyu tamamen devre dışı bırak
+    const data = localStorage.getItem('cart');
+    if (data) {
+      try {
+        setCart(JSON.parse(data));
+      } catch (e) {
+        console.error("Sepet hatası");
+      }
     }
+    setLoading(false);
   }, []);
 
-  if (!mounted) return null;
+  // Sayfa yüklenirken o 6 saniyelik donmayı (INP) engelleyen bariyer
+  if (loading) return <div className="min-h-screen bg-white"></div>;
 
-  const totalPrice = cart.reduce((sum: number, item: any) => sum + (Number(item.price) * Number(item.quantity)), 0);
+  const total = cart.reduce((sum, item) => sum + (Number(item.price) * Number(item.quantity)), 0);
 
-  const handleWhatsAppOrder = () => {
-    if (cart.length === 0) return;
-    const itemDetails = cart.map((item: any) => `- ${item.name} (${item.quantity} Adet) - ${item.price * item.quantity} TL`).join('\n');
-    const message = `*BORCAN KEBAP SIPARIS*\n\n${itemDetails}\n\n*Toplam: ${totalPrice} TL*`;
-    window.open(`https://wa.me/905455093462?text=${encodeURIComponent(message)}`, '_blank');
+  const handleWhatsApp = () => {
+    const list = cart.map(i => `* ${i.name} (${i.quantity} Adet)`).join('\n');
+    const msg = `*BORCAN KEBAP SIPARIS*\n\n${list}\n\n*Toplam: ${total} TL*`;
+    window.open(`https://wa.me/905455093462?text=${encodeURIComponent(msg)}`, '_blank');
   };
 
   if (cart.length === 0) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center pt-24 font-sans text-center px-4">
-        <h2 className="text-xl font-bold text-gray-500 mb-6">Sepetiniz şu an boş.</h2>
-        <a href="/menu" className="bg-red-600 text-white px-8 py-3 rounded-xl font-bold">Menüye Dön</a>
+      <div className="min-h-screen flex flex-col items-center justify-center font-sans">
+        <h2 className="text-xl text-gray-400 mb-6 font-bold">Sepetiniz şu an boş görünüyor.</h2>
+        <a href="/menu" className="bg-red-600 text-white px-10 py-4 rounded-2xl font-black">MENÜYE DÖN</a>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-24 pb-12 px-4 font-sans">
-      <div className="max-w-2xl mx-auto bg-white p-6 rounded-3xl shadow-xl">
-        <h1 className="text-2xl font-black mb-6 border-b pb-4 text-red-600">Sipariş Özeti</h1>
-        <div className="space-y-4">
-          {cart.map((item: any) => (
-            <div key={item.id} className="flex justify-between items-center border-b pb-4">
-              <span className="font-bold text-gray-800">{item.name} ({item.quantity})</span>
+    <div className="min-h-screen bg-gray-50 pt-24 pb-12 px-4 font-sans text-gray-900">
+      <div className="max-w-2xl mx-auto bg-white p-8 rounded-[40px] shadow-2xl">
+        <h1 className="text-3xl font-black mb-8 text-red-600">Siparişiniz</h1>
+        <div className="space-y-4 mb-8">
+          {cart.map((item, index) => (
+            <div key={index} className="flex justify-between border-b pb-4 items-center">
+              <span className="font-bold">{item.name} <span className="text-gray-400">x{item.quantity}</span></span>
               <span className="font-black text-red-600">{item.price * item.quantity} TL</span>
             </div>
           ))}
         </div>
-        <div className="mt-8 bg-gray-50 p-6 rounded-2xl flex justify-between items-center">
-          <span className="text-lg font-bold">Toplam Tutar:</span>
-          <span className="text-2xl font-black text-red-600">{totalPrice} TL</span>
+        <div className="bg-red-50 p-6 rounded-3xl flex justify-between items-center mb-8">
+          <span className="text-xl font-bold">Ödenecek Tutar:</span>
+          <span className="text-3xl font-black text-red-600">{total} TL</span>
         </div>
         <button 
-          onClick={handleWhatsAppOrder}
-          className="w-full bg-green-600 text-white font-black py-5 rounded-2xl text-xl mt-8 shadow-lg hover:bg-green-700 transition-transform active:scale-95"
+          onClick={handleWhatsApp}
+          className="w-full bg-green-600 text-white font-black py-6 rounded-3xl text-2xl shadow-xl hover:bg-green-700 active:scale-95 transition-all"
         >
-          Siparişi WhatsApp ile Gönder 🚀
+          WHATSAPP'TAN GÖNDER 🚀
         </button>
       </div>
     </div>
   );
-};
-
-// Bu satir Vercel'in sunucu tarafli hata vermesini kesin olarak engeller
-export default dynamic(() => Promise.resolve(CartComponent), { ssr: false });
+}
