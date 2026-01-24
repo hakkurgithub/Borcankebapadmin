@@ -2,7 +2,8 @@
 
 export default function Contact() {
   const borcanAddress = "Beyoglu Caddesi No: 35/A Parseller, Avcilar/Istanbul";
-  const borcanMapsUrl = "https://maps.app.goo.gl/YourActualBorcanLink"; 
+  // Gercek Google Haritalar baglantisi
+  const borcanMapsUrl = "https://www.google.com/maps/dir//Parseller,+Beyoğlu+Cd.+No:35,+34320+Avcılar%2Fİstanbul"; 
   const borcanPhone = "0212 423 37 27";
   const borcanWhatsApp = "905455093462";
 
@@ -17,7 +18,8 @@ export default function Contact() {
           <div className="bg-white p-8 rounded-3xl shadow-xl border border-gray-100">
             <h3 className="text-xl font-bold mb-4">Adresimiz</h3>
             <p className="text-gray-600 mb-8">{borcanAddress}</p>
-            <a href={borcanMapsUrl} target="_blank" className="inline-block bg-red-600 text-white font-bold py-4 px-8 rounded-2xl shadow-lg hover:bg-red-700 transition-all">
+            {/* DUZELTILEN SATIR BURASI */}
+            <a href={borcanMapsUrl} target="_blank" rel="noopener noreferrer" className="inline-block bg-red-600 text-white font-bold py-4 px-8 rounded-2xl shadow-lg hover:bg-red-700 transition-all">
               Haritada Yol Tarifi Al
             </a>
           </div>
