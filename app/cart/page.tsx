@@ -15,11 +15,11 @@ export default function CartPage() {
     }
   }, []);
 
-  const totalPrice = cart.reduce((sum, item) => sum + (Number(item.price) * Number(item.quantity)), 0);
+  const totalPrice = cart.reduce((sum, item: any) => sum + (Number(item.price) * Number(item.quantity)), 0);
 
   const handleWhatsAppOrder = () => {
     if (cart.length === 0) return;
-    const itemDetails = cart.map((item) => `- ${item.name} (${item.quantity} Adet) - ${item.price * item.quantity} TL`).join('\n');
+    const itemDetails = cart.map((item: any) => `- ${item.name} (${item.quantity} Adet) - ${item.price * item.quantity} TL`).join('\n');
     const message = `*BORCAN KEBAP SIPARIS*\n\n${itemDetails}\n\n*Toplam: ${totalPrice} TL*\n\nSiparisi onayliyorum.`;
     const waUrl = `https://wa.me/905455093462?text=${encodeURIComponent(message)}`;
     window.open(waUrl, '_blank');
