@@ -2,15 +2,14 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
-import { ShoppingCart, Menu as MenuIcon, X, Phone } from 'lucide-react';
+import { ShoppingCart } from 'lucide-react';
 
 export default function Navbar() {
   const pathname = usePathname();
-  const [isOpen, setIsOpen] = useState(false);
   const [itemCount, setItemCount] = useState(0);
 
-  // SEPET SAYACINI GÜNCELLEYEN KRİTİK KISIM
   useEffect(() => {
+    // Sayacı güncelleyen fonksiyon
     const updateCount = () => {
       try {
         const savedCart = localStorage.getItem('cart');
@@ -22,51 +21,38 @@ export default function Navbar() {
     };
 
     updateCount();
-    // Sayfa her yüklendiğinde hafızayı tekrar kontrol et
-  }, []);
 
-  const navLinks = [
-    { name: 'Ana Sayfa', href: '/' },
-    { name: 'Menü', href: '/menu' },
-    { name: 'Hakkımızda', href: '/about' },
-    { name: 'İletişim', href: '/contact' },
-  ];
+    // Diğer sekmelerde veya sayfa içi değişimlerde sayacı canlı tutar
+    window.addEventListener('storage', updateCount);
+    const interval = setInterval(updateCount, 1000); // Her saniye kontrol et (Garantici yöntem)
+
+    return () => {
+      window.removeEventListener('storage', updateCount);
+      clearInterval(interval);
+    };
+  }, [pathname]);
 
   return (
-    <nav className="fixed w-full z-50 bg-red-700 text-white shadow-lg">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-20">
-          <Link href="/" className="flex items-center space-x-2 group">
-            <span className="text-2xl font-black tracking-tighter group-hover:text-yellow-400 transition-colors">
-              Borcan Kebap
-            </span>
-          </Link>
-
-          {/* Desktop Nav */}
-          <div className="hidden md:flex items-center space-x-8">
-            {navLinks.map((link) => (
-              <Link
-                key={link.name}
-                href={link.href}
-                className={`text-sm font-bold transition-all hover:text-yellow-400 ${
-                  pathname === link.href ? 'text-yellow-400' : 'text-white'
-                }`}
-              >
-                {link.name}
-              </Link>
-            ))}
+    <nav className="fixed w-full z-50 bg-red-700 text-white shadow-lg h-20 flex items-center">
+      <div className="max-w-7xl mx-auto px-4 flex justify-between w-full items-center">
+        <Link href="/" className="text-2xl font-black tracking-tighter hover:text-yellow-400 transition-colors">
+          Borcan Kebap
+        </Link>
+        
+        <div className="flex items-center gap-4 sm:gap-6">
+          <Link href="/menu" className="font-bold hover:text-yellow-400 text-sm sm:text-base">Menü</Link>
+          
+          <Link href="/cart" className="relative bg-yellow-400 text-red-700 px-4 py-2.5 rounded-2xl flex items-center gap-2 hover:scale-105 transition-transform shadow-md">
+            <ShoppingCart className="w-5 h-5" />
+            <span className="font-black text-sm hidden sm:inline">Sepetim</span>
             
-            <Link href="/cart" className="relative group bg-yellow-400 text-red-700 p-3 rounded-2xl hover:scale-105 transition-transform flex items-center gap-2">
-              <ShoppingCart className="w-6 h-6" />
-              <span className="font-black text-sm">Sepetim</span>
-              {/* KIRMIZI İŞARET BURADA GÖRÜNECEK */}
-              {itemCount > 0 && (
-                <span className="absolute -top-2 -right-2 bg-white text-red-600 text-xs font-black w-6 h-6 rounded-full flex items-center justify-center shadow-md border-2 border-red-600 animate-bounce">
-                  {itemCount}
-                </span>
-              )}
-            </Link>
-          </div>
+            {/* KIRMIZI SAYAÇ İŞARETİ */}
+            {itemCount > 0 && (
+              <span className="absolute -top-2 -right-2 bg-red-600 text-white text-[10px] font-black w-6 h-6 rounded-full flex items-center justify-center border-2 border-white animate-pulse shadow-lg">
+                {itemCount}
+              </span>
+            )}
+          </Link>
         </div>
       </div>
     </nav>
