@@ -1,6 +1,9 @@
 'use client';
+export const dynamic = 'force-dynamic';
+export const fetchCache = 'force-no-store';
 
 import { useEffect, useState } from 'react';
+// ... geri kalan sepet kodlarınız ...
 
 export default function CartPage() {
   const [cart, setCart] = useState<any[]>([]);

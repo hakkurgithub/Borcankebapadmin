@@ -1,28 +1,35 @@
 'use client';
 
-import { useCart } from '../../components/CartProvider';
-
 export default function MenuButton({ product }: { product: any }) {
-  const { addItem } = useCart();
-
-  const handleAdd = () => {
-    // TypeScript hata vermemesi için veriyi CartItem tipine uygun gönderiyoruz
-    addItem({
-      id: product.id,
-      name: product.name,
-      price: product.price,
-      quantity: 1
-      // Eğer CartProvider 'image' kabul etmiyorsa buraya eklemiyoruz.
-      // Eğer resmin sepette görünmesini istiyorsanız CartProvider içindeki tipi (type) güncellemelisiniz.
-    } as any); 
-    
-    alert(`${product.name} sepete eklendi!`);
+  const addToCart = () => {
+    try {
+      // 1. Mevcut sepeti yerel hafızadan (localStorage) çek
+      const currentData = localStorage.getItem('cart');
+      const currentCart = currentData ? JSON.parse(currentData) : [];
+      
+      // 2. Yeni ürünü ekle (Sunucuya gitmeden, anında!)
+      const updatedCart = [...currentCart, { 
+        id: product.id || Date.now(), 
+        name: product.name, 
+        price: product.price, 
+        quantity: 1 
+      }];
+      
+      // 3. Hafızaya geri yaz
+      localStorage.setItem('cart', JSON.stringify(updatedCart));
+      
+      // 4. Kullanıcıyı bilgilendir ve sayfayı yenile (Sepet ikonunun güncellenmesi için)
+      alert(`${product.name} sepete eklendi!`);
+      window.location.reload(); 
+    } catch (error) {
+      console.error("Sepet hatasi:", error);
+    }
   };
 
   return (
-    <button
-      onClick={handleAdd}
-      className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-xl transition-colors duration-200 flex items-center justify-center gap-2 mt-auto"
+    <button 
+      onClick={addToCart}
+      className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-4 rounded-2xl shadow-lg transition-all active:scale-95 flex items-center justify-center gap-2"
     >
       <span>🛒</span>
       Sepete Ekle
