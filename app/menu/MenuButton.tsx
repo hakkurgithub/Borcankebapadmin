@@ -3,11 +3,11 @@
 export default function MenuButton({ product }: { product: any }) {
   const addToCart = () => {
     try {
-      // 1. Mevcut sepeti yerel hafızadan (localStorage) çek
+      // Yerel hafızayı oku
       const currentData = localStorage.getItem('cart');
       const currentCart = currentData ? JSON.parse(currentData) : [];
       
-      // 2. Yeni ürünü ekle (Sunucuya gitmeden, anında!)
+      // Yeni ürünü ekle
       const updatedCart = [...currentCart, { 
         id: product.id || Date.now(), 
         name: product.name, 
@@ -15,11 +15,10 @@ export default function MenuButton({ product }: { product: any }) {
         quantity: 1 
       }];
       
-      // 3. Hafızaya geri yaz
+      // Kaydet
       localStorage.setItem('cart', JSON.stringify(updatedCart));
       
-      // 4. Kullanıcıyı bilgilendir ve sayfayı yenile (Sepet ikonunun güncellenmesi için)
-      alert(`${product.name} sepete eklendi!`);
+      // Navbar sayacının güncellenmesi için sayfayı yenile
       window.location.reload(); 
     } catch (error) {
       console.error("Sepet hatasi:", error);
