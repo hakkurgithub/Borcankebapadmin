@@ -29,7 +29,25 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <AuthProvider>
           <CartProvider>
             <Navbar />
-            <main className="flex-grow w-full">{children}</main>
+            <main className="flex-grow w-full">
+              {/* ÜST REKLAM ALANI - Yeni Pencere Odaklı Düzenleme */}
+              <div className="container mx-auto px-4 py-2 text-center overflow-hidden">
+                <ins className="adsbygoogle"
+                  style={{ display: 'block' }}
+                  data-ad-client="ca-pub-1758003652328292"
+                  data-ad-slot="8254287346" // Örnek ID, panelinizdekiyle değişebilir
+                  data-ad-format="auto"
+                  data-full-width-responsive="true"
+                  data-ad-type="link"
+                  data-target="_blank"> {/* Bu parametre Google'a yeni pencere isteğini iletir */}
+                </ins>
+                <script>
+                  (adsbygoogle = window.adsbygoogle || []).push({});
+                </script>
+              </div>
+
+              {children}
+            </main>
             <Footer />
           </CartProvider>
         </AuthProvider>
