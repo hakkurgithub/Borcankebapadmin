@@ -9,7 +9,7 @@ export default function Navbar() {
   const [itemCount, setItemCount] = useState(0);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  // Menü linklerini buraya ekliyoruz
+  // Linkler bu dizide tanımlı olduğu için Navbar'da görünecek
   const navLinks = [
     { name: 'Ana Sayfa', href: '/' },
     { name: 'Menü', href: '/menu' },
@@ -47,7 +47,7 @@ export default function Navbar() {
           Borcan Kebap
         </Link>
         
-        {/* MASAÜSTÜ LİNKLER */}
+        {/* MASAÜSTÜ MENÜ (Büyük Ekranlar İçin) */}
         <div className="hidden md:flex items-center gap-8">
           {navLinks.map((link) => (
             <Link 
@@ -60,7 +60,7 @@ export default function Navbar() {
           ))}
         </div>
 
-        {/* SAĞ TARAF: SEPET VE MOBİL MENÜ BUTONU */}
+        {/* SAĞ TARAF: SEPET VE MOBİL BUTON */}
         <div className="flex items-center gap-4">
           <Link href="/cart" className="relative bg-yellow-400 text-red-700 px-4 py-2.5 rounded-2xl flex items-center gap-2 hover:scale-105 transition-transform shadow-md">
             <ShoppingCart className="w-5 h-5" />
@@ -72,25 +72,25 @@ export default function Navbar() {
             )}
           </Link>
 
-          {/* MOBİL MENÜ BUTONU */}
+          {/* MOBİL MENÜ BUTONU (md:hidden sadece telefonda görünür) */}
           <button 
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             className="md:hidden p-2 hover:bg-red-800 rounded-lg transition-colors"
           >
-            {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            {isMobileMenuOpen ? <X className="w-7 h-7" /> : <Menu className="w-7 h-7" />}
           </button>
         </div>
       </div>
 
-      {/* MOBİL MENÜ PANELİ */}
+      {/* MOBİL MENÜ PANELİ (Butona Basınca Açılır) */}
       {isMobileMenuOpen && (
-        <div className="absolute top-20 left-0 w-full bg-red-800 p-4 flex flex-col gap-4 md:hidden shadow-xl border-t border-red-900">
+        <div className="absolute top-20 left-0 w-full bg-red-800 p-6 flex flex-col gap-6 md:hidden shadow-2xl border-t border-red-900 animate-in slide-in-from-top duration-300">
           {navLinks.map((link) => (
             <Link 
               key={link.name} 
               href={link.href} 
               onClick={() => setIsMobileMenuOpen(false)}
-              className="font-bold py-2 border-b border-red-700 last:border-0"
+              className="font-bold text-lg py-3 border-b border-red-700 last:border-0 hover:text-yellow-400"
             >
               {link.name}
             </Link>
