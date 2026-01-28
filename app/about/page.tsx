@@ -1,80 +1,47 @@
-import Image from "next/image";
-import AdBanner from "../../components/AdBanner";
+import React from 'react';
 
 export default function AboutPage() {
   return (
-    <div className="bg-white min-h-screen pb-12">
-      {/* Hero Bölümü */}
-      <div className="relative h-[300px] w-full bg-red-900 flex items-center justify-center">
-        <div className="absolute inset-0 bg-black/50 z-10"></div>
-        <Image
-          src="https://raw.githubusercontent.com/hakkurgithub/images/main/hero.png"
-          alt="Borcan Kebap Hakkımızda"
-          fill
-          className="object-cover opacity-60"
-        />
-        <h1 className="relative z-20 text-4xl md:text-5xl font-bold text-white tracking-wider">
-          HİKAYEMİZ
-        </h1>
-      </div>
-
-      <div className="container mx-auto px-4 py-12 max-w-4xl">
-        {/* İçerik Bölümü */}
-        <div className="space-y-8 text-gray-700 text-lg leading-relaxed">
-          <div className="bg-red-50 p-8 rounded-2xl border-l-4 border-red-600 shadow-sm">
-            <h2 className="text-2xl font-bold text-red-700 mb-4">Lezzetin Adresi: Borcan Kebap</h2>
-            <p>
-              Yılların getirdiği tecrübe ve ustalığı, en taze malzemelerle buluşturarak sofralarınıza getiriyoruz. 
-              Borcan Kebap olarak amacımız sadece karnınızı doyurmak değil, damaklarınızda unutulmaz bir iz bırakmaktır.
-            </p>
+    <div className="min-h-screen bg-stone-50 pt-24 pb-16 px-6">
+      <div className="max-w-4xl mx-auto">
+        <div className="bg-white rounded-[40px] shadow-sm border border-stone-200 overflow-hidden">
+          {/* Header */}
+          <div className="bg-red-700 p-12 text-center text-white">
+            <h1 className="text-4xl font-black mb-4">Lezzetin Kardeşlik Hikayesi</h1>
+            <p className="text-red-100 text-lg">Borcan Kebap: Dört Kardeşin Ortak Tutkusu</p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8 items-center">
-            <div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">🔥 Ustalık ve Gelenek</h3>
+          {/* İçerik */}
+          <div className="p-12 space-y-8 text-stone-700 leading-relaxed">
+            <section>
+              <h2 className="text-2xl font-bold text-stone-900 mb-4">Biz Kimiz?</h2>
               <p>
-                Ocak başındaki ateşin harı, etin en kalitelisi ve baharatın en doğalı... 
-                Geleneksel yöntemlerden şaşmadan, modern hijyen standartlarında hazırladığımız kebaplarımız, 
-                şehrin en iddialı lezzetleri arasında yer alıyor.
+                Borcan Kebap, temelinde aile bağları ve mutfak ustalığı olan bir lezzet durağıdır. 
+                Dört kardeşin omuz omuza vererek kurduğu bu işletme, geleneksel Türk mutfağının 
+                en seçkin kebap ve döner çeşitlerini modern bir hizmet anlayışıyla sunmaktadır.
               </p>
-            </div>
-            <div className="relative h-64 rounded-xl overflow-hidden shadow-lg">
-               <Image 
-                 src="https://raw.githubusercontent.com/hakkurgithub/images/main/urfa-porsiyon.jpg" 
-                 alt="Ustalık" 
-                 fill 
-                 className="object-cover"
-               />
-            </div>
-          </div>
+            </section>
 
-          <div className="grid md:grid-cols-2 gap-8 items-center">
-             <div className="relative h-64 rounded-xl overflow-hidden shadow-lg order-2 md:order-1">
-               <Image 
-                 src="https://raw.githubusercontent.com/hakkurgithub/images/main/beyti-sarma.jpg" 
-                 alt="Misafirperverlik" 
-                 fill 
-                 className="object-cover"
-               />
+            <div className="grid md:grid-cols-2 gap-8 py-6">
+              <div className="bg-stone-100 p-6 rounded-3xl border border-stone-200">
+                <h3 className="font-bold text-red-700 mb-2">Vizyonumuz</h3>
+                <p className="text-sm">Kardeşler arası dayanışmayı mutfaktaki ustalıkla birleştirerek, misafirlerimize her zaman en kaliteli ve taze lezzetleri sunmak.</p>
+              </div>
+              <div className="bg-stone-100 p-6 rounded-3xl border border-stone-200">
+                <h3 className="font-bold text-red-700 mb-2">Misyonumuz</h3>
+                <p className="text-sm">Geleneksel tariflerimize sadık kalarak, hijyen ve kalite standartlarından ödün vermeden kebap kültürünü gelecek nesillere taşımak.</p>
+              </div>
             </div>
-            <div className="order-1 md:order-2">
-              <h3 className="text-xl font-bold text-gray-900 mb-2">🍅 Tazelik Garantisi</h3>
+
+            <section className="border-t border-stone-100 pt-8">
+              <h2 className="text-2xl font-bold text-stone-900 mb-4">Neden Borcan Kebap?</h2>
               <p>
-                Mutfağımıza giren her sebze günlük, her et özenle seçilmiştir. 
-                Dondurulmuş ürün kullanmıyor, günlük hazırladığımız mezelerimiz ve sıcacık lavaşımızla 
-                sizlere gerçek bir ziyafet sunuyoruz.
+                Bizim için her tabak, ailemizin birer ferdi olarak gördüğümüz misafirlerimize sunduğumuz bir ikramdır. 
+                Etlerimizin seçiminden baharatlarımızın dengesine kadar her aşama, dört kardeşin titiz denetiminden geçer. 
+                Sadece bir yemek değil, bir güven ve samimiyet hikayesi sunuyoruz.
               </p>
-            </div>
+            </section>
           </div>
-        </div>
-
-        {/* REKLAM ALANI - (İşte burası doğru yer!) */}
-        <div className="mt-12">
-            <AdBanner 
-              dataAdSlot="0987654321" 
-              dataAdFormat="auto" 
-              dataFullWidthResponsive={true} 
-            />
         </div>
       </div>
     </div>
