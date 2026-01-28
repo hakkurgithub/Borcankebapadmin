@@ -1,4 +1,3 @@
-// components/Footer.tsx
 import Link from 'next/link';
 
 export default function Footer() {
@@ -79,7 +78,7 @@ export default function Footer() {
               <li className="flex items-start">
                 <i className="ri-map-pin-line mr-2 mt-1"></i>
                 <a
-                  href="https://maps.app.goo.gl/rQdBMCqk5GMwdVSM7"
+                  href="https://maps.google.com"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-gray-400 hover:text-white transition-colors cursor-pointer"
@@ -102,8 +101,16 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-          <p>© 2024 Borcan Kebap. Tüm hakları saklıdır.</p>
+        {/* Silicon Campus Logo ve Telif Alanı */}
+        <div className="border-t border-gray-800 mt-8 pt-8 flex flex-col items-center">
+          <img 
+            src="https://raw.githubusercontent.com/hakkurgithub/images/main/silicon-campus-logo.jpg" 
+            alt="Silicon Campus Logo" 
+            className="h-8 mb-4 opacity-70 hover:opacity-100 transition-opacity"
+          />
+          <p className="text-gray-400 text-sm italic">
+            © 2024 Tüm hakları Silicon Campus e aittir.
+          </p>
         </div>
       </div>
     </footer>
