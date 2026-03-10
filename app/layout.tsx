@@ -5,7 +5,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer"; 
 import { CartProvider } from "@/components/CartProvider";
 import AuthProvider from "@/components/AuthProvider";
-import AdBanner from "@/components/AdBanner"; // Akıllı bileşeni çağırıyoruz
+import AdBanner from "@/components/AdBanner"; // Akıllı bileşeni bağladık
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,7 +18,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="tr">
       <head>
-        {/* Google AdSense Doğrulama ve Ana Script */}
+        {/* Google AdSense Doğrulama ve Ana Script - Silicon Campus Onaylı */}
         <meta name="google-adsense-account" content="ca-pub-1758003652328292" />
         <script 
           async 
