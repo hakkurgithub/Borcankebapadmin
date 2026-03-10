@@ -5,6 +5,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer"; 
 import { CartProvider } from "@/components/CartProvider";
 import AuthProvider from "@/components/AuthProvider";
+import AdBanner from "@/components/AdBanner"; // Yereldeki dosyanızı çağırıyoruz
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -30,19 +31,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           <CartProvider>
             <Navbar />
             <main className="flex-grow w-full pt-20">
-              {/* SABİT REKLAM ALANI - Sayfa Düzenini Bozmaz */}
-              <div className="container mx-auto px-4 py-4 text-center min-h-[100px] overflow-hidden">
-                <ins className="adsbygoogle"
-                  style={{ display: 'block', textAlign: 'center' }}
-                  data-ad-layout="in-article"
-                  data-ad-format="fluid"
-                  data-ad-client="ca-pub-1758003652328292"
-                  data-ad-slot="8254287346">
-                </ins>
-                <script dangerouslySetInnerHTML={{
-                  __html: '(adsbygoogle = window.adsbygoogle || []).push({});'
-                }} />
-              </div>
+              
+              {/* AKILLI REKLAM ALANI - Hata Vermez, Düzeni Bozmaz */}
+              <AdBanner dataAdSlot="8254287346" />
               
               {children}
             </main>
