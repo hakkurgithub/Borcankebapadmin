@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Borcan Kebap - Menü QR Kodu</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #ff6b35, #f7931e);
+        }
+        
+        .brand {
+            margin-bottom: 30px;
+        }
+        
+        .brand h1 {
+            color: #1a1a2e;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .brand p {
+            color: #666;
+            font-size: 16px;
+            font-weight: 400;
+        }
+        
+        .qr-wrapper {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            display: inline-block;
+            margin-bottom: 25px;
+            position: relative;
+        }
+        
+        #qrcode {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        #qrcode img {
+            border-radius: 8px;
+            display: block;
+        }
+        
+        .badge {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: #10b981;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+        
+        .features {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .feature {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            color: #555;
+            background: #f3f4f6;
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-weight: 500;
+        }
+        
+        .feature svg {
+            width: 16px;
+            height: 16px;
+            color: #ff6b35;
+        }
+        
+        .download-section {
+            border-top: 1px solid #e5e7eb;
+            padding-top: 25px;
+        }
+        
+        .btn-download {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-download:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 107, 53, 0.4);
+        }
+        
+        .btn-download:active {
+            transform: translateY(0);
+        }
+        
+        .btn-download svg {
+            width: 20px;
+            height: 20px;
+        }
+        
+        .url-display {
+            margin-top: 20px;
+            padding: 12px;
+            background: #f9fafb;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            color: #374151;
+            word-break: break-all;
+            border: 1px dashed #d1d5db;
+        }
+        
+        .status {
+            margin-top: 15px;
+            font-size: 14px;
+            color: #10b981;
+            font-weight: 500;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .status.show {
+            opacity: 1;
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 30px 20px;
+            }
+            
+            .brand h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="brand">
+            <h1>🥙 Borcan Kebap</h1>
+            <p>Dijital Menü QR Kodu</p>
+        </div>
+        
+        <div class="qr-wrapper">
+            <span class="badge">H-Grade</span>
+            <div id="qrcode"></div>
+        </div>
+        
+        <div class="features">
+            <div class="feature">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                </svg>
+                Hızlı Tarama
+            </div>
+            <div class="feature">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                Yüksek Hata Düzeltme
+            </div>
+        </div>
+        
+        <div class="download-section">
+            <button class="btn-download" onclick="downloadQR()">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                </svg>
+                QR Kodu İndir
+            </button>
+            
+            <div class="url-display">
+                https://www.borcankebap.com/menu
+            </div>
+            
+            <div class="status" id="status">
+                ✅ QR kod başarıyla indirildi!
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // QR Kod oluşturma - Yüksek Hata Düzeltme (H-Level)
+        const qrcode = new QRCode(document.getElementById("qrcode"), {
+            text: "https://www.borcankebap.com/menu",
+            width: 256,
+            height: 256,
+            colorDark: "#000000",
+            colorLight: "#ffffff",
+            correctLevel: QRCode.CorrectLevel.H // En yüksek hata düzeltme seviyesi
+        });
+        
+        // İndirme fonksiyonu
+        function downloadQR() {
+            const qrCanvas = document.querySelector("#qrcode canvas");
+            const qrImage = document.querySelector("#qrcode img");
+            
+            let downloadLink = document.createElement("a");
+            
+            // Canvas varsa (modern tarayıcılar), canvas'dan indir
+            if (qrCanvas) {
+                downloadLink.href = qrCanvas.toDataURL("image/png");
+            } 
+            // Yoksa img src'den indir (fallback)
+            else if (qrImage) {
+                downloadLink.href = qrImage.src;
+            }
+            
+            downloadLink.download = "borcan-kebap-menu-qr.png";
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            document.body.removeChild(downloadLink);
+            
+            // Başarı mesajı göster
+            const status = document.getElementById("status");
+            status.classList.add("show");
+            setTimeout(() => {
+                status.classList.remove("show");
+            }, 3000);
+        }
+        
+        // Hover efekti için QR kod wrapper
+        const wrapper = document.querySelector('.qr-wrapper');
+        wrapper.addEventListener('mouseenter', () => {
+            wrapper.style.transform = 'scale(1.02)';
+            wrapper.style.transition = 'transform 0.3s ease';
+        });
+        wrapper.addEventListener('mouseleave', () => {
+            wrapper.style.transform = 'scale(1)';
+        });
+    </script>
+</body>
+</html>
