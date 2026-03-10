@@ -5,7 +5,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer"; 
 import { CartProvider } from "@/components/CartProvider";
 import AuthProvider from "@/components/AuthProvider";
-import AdBanner from "@/components/AdBanner"; // Yereldeki dosyanızı çağırıyoruz
+import AdBanner from "@/components/AdBanner"; // Akıllı bileşeni çağırıyoruz
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,7 +18,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="tr">
       <head>
-        {/* Google AdSense Doğrulama ve Ana Script - Silicon Campus Onaylı */}
+        {/* Google AdSense Doğrulama ve Ana Script */}
         <meta name="google-adsense-account" content="ca-pub-1758003652328292" />
         <script 
           async 
@@ -32,8 +32,10 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             <Navbar />
             <main className="flex-grow w-full pt-20">
               
-              {/* AKILLI REKLAM ALANI - Hata Vermez, Düzeni Bozmaz */}
-              <AdBanner dataAdSlot="8254287346" />
+              {/* HAS İNSAN TASARIMI: Güvenli ve Profesyonel Reklam Yerleşimi */}
+              <div className="container mx-auto px-4">
+                <AdBanner dataAdSlot="8254287346" />
+              </div>
               
               {children}
             </main>
