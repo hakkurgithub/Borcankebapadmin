@@ -23,7 +23,7 @@ export default function CartPage() {
     updated.splice(index, 1);
     setCart(updated);
     localStorage.setItem('cart', JSON.stringify(updated));
-    window.dispatchEvent(new Event('storage')); // Navbar sayacını anında günceller
+    window.dispatchEvent(new Event('storage'));
   };
 
   if (!mounted) return null;
@@ -46,7 +46,6 @@ export default function CartPage() {
     <div className="min-h-screen bg-stone-100 pt-32 pb-12 px-4">
       <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
         
-        {/* SOL TARAF: ÜRÜN LİSTESİ (Abdullah Usta Stili) */}
         <div className="lg:col-span-2 space-y-4">
           <h2 className="text-2xl font-black text-stone-800 mb-6 flex items-center gap-2">
             Sepetim <span className="text-red-600">({cart.length} Ürün)</span>
@@ -60,7 +59,6 @@ export default function CartPage() {
               <div className="text-sm font-black bg-stone-100 px-4 py-2 rounded-full text-stone-500">
                 x{item.quantity || 1}
               </div>
-              {/* BEKLEDİĞİNİZ SİLME TUŞU */}
               <button 
                 onClick={() => removeItem(index)} 
                 className="bg-stone-50 text-stone-400 hover:bg-red-50 hover:text-red-600 p-3 rounded-xl transition-all border border-stone-100"
@@ -71,7 +69,6 @@ export default function CartPage() {
           ))}
         </div>
 
-        {/* SAĞ TARAF: SİPARİŞİ TAMAMLA FORMU */}
         <div className="lg:col-span-1">
           <div className="bg-white p-8 rounded-[32px] shadow-xl border border-stone-200 sticky top-28">
             <h2 className="text-2xl font-black text-stone-900 mb-8">Siparişi Tamamla</h2>

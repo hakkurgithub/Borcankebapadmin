@@ -17,7 +17,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="tr">
       <head>
-        {/* Google AdSense Doğrulama ve Ana Script */}
+        {/* Google AdSense Doğrulama ve Ana Script - Silicon Campus Onaylı */}
         <meta name="google-adsense-account" content="ca-pub-1758003652328292" />
         <script 
           async 
@@ -25,25 +25,25 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           crossOrigin="anonymous"
         ></script>
       </head>
-      <body className={inter.className + " flex flex-col min-h-screen bg-stone-50"}>
+      <body className={`${inter.className} flex flex-col min-h-screen bg-stone-50`}>
         <AuthProvider>
           <CartProvider>
             <Navbar />
             <main className="flex-grow w-full pt-20">
-              {/* REKLAM ALANI - Google Standartlarına Uygun */}
+              {/* SABİT REKLAM ALANI - Sayfa Düzenini Bozmaz */}
               <div className="container mx-auto px-4 py-4 text-center min-h-[100px] overflow-hidden">
                 <ins className="adsbygoogle"
-                  style={{ display: 'block' }}
+                  style={{ display: 'block', textAlign: 'center' }}
+                  data-ad-layout="in-article"
+                  data-ad-format="fluid"
                   data-ad-client="ca-pub-1758003652328292"
-                  data-ad-slot="8254287346"
-                  data-ad-format="auto"
-                  data-full-width-responsive="true">
+                  data-ad-slot="8254287346">
                 </ins>
                 <script dangerouslySetInnerHTML={{
                   __html: '(adsbygoogle = window.adsbygoogle || []).push({});'
                 }} />
               </div>
-
+              
               {children}
             </main>
             <Footer />
